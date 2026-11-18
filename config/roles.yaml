@@ -1,0 +1,31 @@
+# 品牌A 客服质检系统 4.0 — 角色映射配置
+# 原则（宽容模式）：已知客服用明确账号集合；其他店铺的新客服靠 `brandb` 前缀识别并去前缀显示；
+# 识别不了的账号默认当客户填入，不报错、不纠结。
+
+version: roles-v0.1.0
+
+# 客服账号前缀（可多个）：以任一前缀开头的账号都识别为客服，显示时去掉前缀
+# brandb = 品牌A 官方自营旗舰店（3C 自营）
+# brandA  = 3C POP 店（品牌B系客服账号）
+agent_prefixes:
+  - brandb
+  - brandA
+
+# 客服账号 → 显示中文名（去前缀）
+agents:
+  brandb-agent-01: 客服A
+  brandb-agent-02: 客服B
+  brandb-agent-03: 客服C
+  brandb-agent-04: 客服D
+  agent-006: "006"           # 特殊客服 ID，显示名就是 006（加引号避免 YAML 转整数）
+bots:
+  - bot_vendor_1000123903
+  - bot_vendor_1000483324
+
+# 未命中客服/机器人名单的账号，默认归为客户
+default_role: customer
+# 需要暴露给人工确认的未知角色
+unknown_role: unknown
+
+# 客服显示名：是否去掉 brandb 前缀（true = 显示上面 agents 的中文名）
+strip_agent_prefix: true

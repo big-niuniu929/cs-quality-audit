@@ -1,0 +1,105 @@
+# 品牌A 客服质检系统 4.0 — 业务规则配置（A/B/C 商机分级）
+# 与 docs/02_商机判定规则ABC.md 一一对应。
+# 本文件的 keywords 是规则引擎的唯一关键词来源，改这里即可改规则（无需改代码）。
+
+version: rules-v0.3.0
+
+conversation:
+  stages:
+    pre_sale: 售前
+    after_sale: 售后
+  # 短会话无效判定
+  invalid_short_conversation:
+    enabled: true
+    max_messages: 5
+    requires_no_substantive_customer_question: true
+  # 即使短会话，出现以下信号也不判无效
+  explicit_signal_overrides_short_rule:
+    - contact_information
+    - purchase_intent
+    - price_or_discount_intent
+    - product_comparison
+
+# 售后关键词（命中且无售前信号 → 售后）
+after_sale_keywords:
+  - 安装
+  - 维修
+  - 退货
+  - 换货
+  - 订单
+  - 发票
+  - 物流
+  - 配送
+  - 售后
+  - 保修
+  - 坏了
+  - 故障
+  - 退款
+
+# 联系方式（电话正则 + 关键词）→ 单独标电销线索 + A 级
+# 兼容掩码号码：13800000000 / 139*******6 / 159******45 / 159****1234（末位须为数字）
+contact:
+  phone_regex: "(?<![0-9])1[3-9][0-9*xX＊×]{8}[0-9](?![0-9*xX＊×])"
+  keywords:
+    - 电话
+    - 手机号
+    - 手机号码
+    - 联系方式
+    - 微信
+    - 加v
+    - 加V
+    - 留个号
+    - 联系我
+    - 留个电话
+
+# 商机信号关键词（按 A/B/C 分组，命中即触发对应等级）
+signals:
+  A:
+    purchase_explicit: [就买, 下单, 买一台, 买这个, 要了, 确定买, 购买, 订购, 多少钱能拿下, 买了]
+    discount: [优惠, 折扣, 活动, 双十一, 双11, 大促, 便宜, 优惠券, 满减, 什么价, 多少钱]
+    purchase_time: [过几天, 明天, 下周, 这两天, 就这几天, 准备买, 这两天买, 马上买, 尽快买]
+  B:
+    comparison: [对比, 比较, 哪个好, 区别, 竞品, 其他品牌, 别的品牌, 另一个, 华为, 小米, 品牌B]
+    plan: [打算买, 下个月买, 以后买, 复购, 再次购买, 还会买, 再买一台, 计划购买, 先看看, 考虑]
+  C:
+    # C 级主要靠「消息数 / 跨天」判断，无固定关键词
+    cross_day_enabled: true
+    min_customer_messages: 5
+
+# 售前必问三组（命中即算客服已覆盖该类必问，用于评分）
+required_questions:
+  room_size_or_people_count: [会议室多大, 会议室大小, 多少人, 人数, 平方米, 平米, 面积, 会议室, 多大]
+  video_conference_need: [视频会议, 视频通话, 视频, 摄像头, 远程会议, 线上会议, 投屏]
+  usage_scenario: [使用场景, 应用场景, 场景, 教学, 培训, 教室, 企业会议, 家庭, 学校, 办公]
+
+# 售后解决信号（客服给出解决方案/转交时的词，用于判断售后是否解决）
+after_sale_resolution_keywords: [建议, 可以, 支持, 步骤, 操作, 联系, 转交, 安排, 处理, 请您, 为您, 热线]
+
+lead_levels:
+  priority: [A, B, C]
+
+ai:
+  suspicious_checks:
+    - response_speed
+    - presale_required_questions
+    - problem_resolution
+    - lead_capture
+    - fatal_candidates
+    - internal_chat      # 内部闲聊识别
+  output_states: [pass, fail, needs_review]
+  all_suspicious_requires_human_review: true
+  preserve_message_refs: true
+
+# 内部闲聊 → 标「无效 + 特殊原因」，需 AI 辅助识别
+special_reasons:
+  internal_chat: 内部闲聊
+
+fatal_candidates:
+  requires_human_confirmation: true
+  items:
+    - abusive_language
+    - private_transaction_inducement
+    - sensitive_information_disclosure
+    - false_promotion_or_price_promise
+    - malicious_refusal_or_deflection
+

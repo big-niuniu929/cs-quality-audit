@@ -1,0 +1,96 @@
+# 品牌A 客服质检系统 4.0 — 产品型号 / SKU 对照
+# 型号从「会话记录.xlsx」的「商品名称」字段自动识别。
+# 识别原则：型号是商品名称末尾的字母数字代号（如 SH75CAB / EG65DS / ST33 / WT17），
+# 或套餐型号（如 MC75GEE+MT71M i5）。识别不出的留空白，不强求、不报错。
+#
+# 注意 SKU 语义：同一型号可有多个套组（主品+配件），一个套组对应一个电商平台 SKU，
+# 不能简单按型号名去重。
+
+version: products-v0.2.0
+
+# 独立型号（平板/配件单品的型号代号），按长度降序识别避免前缀误配
+models:
+  - SG65CAB
+  - SH86CAB
+  - EC55CAD
+  - VH65CAD
+  - VH75CAD
+  - EG65DS
+  - EG75DS
+  - EG86DS
+  - GF65GA
+  - GF75GA
+  - GF86GA
+  - W55PN5
+  - W65PN5
+  - W75PN5
+  - W85PN5
+  - W100PN5
+  - WT17
+  - ST61A
+  - ST23G
+  - ST23H
+  - ST33
+  - ST33W
+  - MT51K
+  - BM22
+  - BM20
+  - BM31
+  - SC51S
+  - WB03
+  - WH2163
+  - WM2179
+  - WM2163
+  - EH86MA
+  - EH65MA
+  # 以下为商品名称里实际出现、用户清单未列但属于同型号族的补充
+  - SH75CAB
+  - EG65CAD
+  - EG75CAD
+  - SC65CDP
+  - W98PNB
+  - CH98ML
+  - ST61H
+
+# 套餐型号（主品 + 配件/主机/内存 组合，按完整串匹配）
+bundles:
+  - "MC75GEE+MT71M i5"
+  - "MC75GEE+MT71M i7"
+  - "MC75GEE+MT71M i5+ST33+SP39+WT17B"
+  - "MC75GEE+MT71M i7+ST33+SP39+WT17B-京仓"
+  - "MC86GEE+MT71M i5"
+  - "MC86GEE+MT71M i7"
+  - "MC86GEE+MT71M i5+ST33+SP39+WT17B"
+  - "MC86GEE+MT71M i7+ST33+SP39+WT17B-京仓"
+  - "MC65HEE+MT81BM i5"
+  - "MC65HEE+MT81BM i5+WT17B"
+  - "MC65HEE+MT81BM i5+ST33+WT17B"
+  - "MC65HEE+MT81BM i5+ST33+SP39+WT17B-京仓"
+  - "MC65HEE+MT81BM i7"
+  - "MC65HEE+MT81BM i7+WT17B"
+  - "MC65HEE+MT81BM i7+ST33+WT17B"
+  - "MC65HEE+MT81BM i7+ST33+SP39+WT17B"
+  - "MC75HEE+MT81BM i5"
+  - "MC75HEE+MT81BM i5+WT17B"
+  - "MC75HEE+MT81BM i5+ST33+WT17B"
+  - "MC75HEE+MT81BM i5+ST33+SP39+WT17B"
+  - "MC75HEE+MT81BM i7"
+  - "MC75HEE+MT81BM i7+WT17B"
+  - "MC75HEE+MT81BM i7+ST33+WT17B"
+  - "MC75HEE+MT81BM i7+ST33+SP39+WT17B-京仓"
+  - "MC86HEE+MT81BM i5"
+  - "MC86HEE+MT81BM i5+WT17B"
+  - "MC86HEE+MT81BM i5+ST33+WT17B"
+  - "MC86HEE+MT81BM i5+ST33+SP39+WT17B-京仓"
+  - "MC86HEE+MT81BM i7"
+  - "MC86HEE+MT81BM i7+WT17B"
+  - "MC86HEE+MT81BM i7+ST33+WT17B"
+  - "MC86HEE+MT81BM i7+ST33+SP39+WT17B"
+  - "MC65HEC+MT81BB i5"
+  - "MC65HEC+ST33+MT81BB i5"
+  - "MC75HEC"
+  - "MC75HEC+ST33"
+
+# 特殊别名：商品名称里出现但需归一化到已知型号的写法
+aliases:
+  "WT17（会议电视）": "WT17"

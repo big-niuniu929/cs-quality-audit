@@ -1,0 +1,34 @@
+app:
+  name: 品牌A 客服质检系统
+  version: 4.0.0
+  timezone: Asia/Shanghai
+  database_path: data/qc.db
+  data_dir: data
+  log_dir: logs
+stores:
+- 品牌A官方自营旗舰店
+- 品牌B
+import:
+  log_extensions:
+  - .log
+  - .txt
+  excel_extension: .xlsx
+  excel_sheet_name: 咨询会话查询
+  log_encoding: utf-8-sig
+  excel_encoding: utf-8
+matching:
+  time_tolerance_seconds: 1800
+  keep_unmatched_independent: true
+ai:
+  base_url: https://gateway.example.com/v1
+  api_type: chat_completions
+  model: your-model-name
+  api_key_env: 品牌A_QC_API_KEY
+  timeout_seconds: 60
+  max_retries: 2
+  concurrency: 3
+  only_suspicious: true
+  hide_key_in_ui: true
+ui:
+  hide_bot_messages_by_default: true
+  show_unmasked_customer_data: false

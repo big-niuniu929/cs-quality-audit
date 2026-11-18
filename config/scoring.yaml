@@ -1,0 +1,77 @@
+# 品牌A 客服质检系统 4.0 — 评分配置（100 分向下扣分）
+# 留资按扣分制（用户已确认）：最高扣 5 分，没尝试留资扣 5 分，获得联系方式/主动被拒 0 分。
+# 话术匹配度、优惠触达本轮不计分。
+
+version: scoring-v0.2.0
+base_score: 100
+pass_score: 60
+
+fatal_item:
+  requires_human_confirmation: true
+  final_score_after_confirmation: 59
+  final_status: 不合格
+  # 致命项关键词（命中即标记致命候选，需人工确认）
+  terms:
+    abusive_language: [傻, 垃圾, 滚, 脑子有问题]
+    private_transaction_inducement: [私下, 加微信转账, 微信转账, 不要平台, 线下付款]
+    sensitive_information_disclosure: [身份证号, 银行卡号, 密码, 验证码]
+    false_promotion_or_price_promise: [绝对最低价, 保证最低, 绝对不会涨价, 百分之百, 永久保价]
+    malicious_refusal_or_deflection: [不管, 自己看, 爱买不买, 不知道别问]
+
+dimensions:
+  response_speed:
+    enabled_for: [pre_sale]
+    max_deduction: 10
+    bot_counts_as_first_response: true
+    thresholds:
+      excellent_seconds: 20
+      good_seconds: 60
+      qualified_seconds: 180
+    deductions:
+      excellent: 0
+      good: 2
+      qualified: 5
+      failed: 10
+
+  presale_required_questions:
+    enabled_for: [pre_sale]
+    max_deduction: 20
+    customer_provided_counts_as_covered: true
+    covered_count_deductions:
+      3: 0
+      2: 5
+      1: 10
+      0: 20
+    question_groups:
+      - room_size_or_people_count
+      - video_conference_need
+      - usage_scenario
+
+  problem_resolution:
+    enabled_for: [pre_sale]
+    max_deduction: 20
+    deductions:
+      complete: 0
+      basic: 5
+      partial: 10
+      unresolved: 20
+
+  lead_capture:
+    enabled_for: [pre_sale]
+    max_deduction: 5
+    deductions:
+      contact_obtained: 0
+      actively_asked_but_refused: 0
+      no_attempt: 5
+
+  phrase_match:
+    enabled: false
+    note: 话术匹配度本轮不计分，作为后续代办模块。
+
+  promotion_touch:
+    enabled: false
+    note: 优惠触达本轮不计分，只记录触达情况。
+
+  after_sale:
+    enabled: false
+    note: 售后只做数量和会话记录，不使用售前评分。
