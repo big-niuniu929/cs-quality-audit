@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全量自动化客服质检系统 · 系统总览</title>
+<style>
+:root{
+  --ink:#1f2430; --muted:#64708a; --line:#e3e8f2; --card:#ffffff;
+  --brand:#6d4bff; --brand2:#9d83ff; --brand-soft:#f1edff;
+  --green:#2f9e6b; --green-soft:#eaf8f1;
+  --amber:#b7791f; --amber-soft:#fff7e6;
+  --red:#d14b4b; --red-soft:#fdeeee;
+  --gold1:#fff3ae; --gold2:#f3c33f; --gold3:#b9770e;
+  --radius:16px;
+  --shadow:0 10px 30px rgba(55,63,110,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; color:var(--ink);
+  font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB","Noto Sans CJK SC",sans-serif;
+  background:
+    radial-gradient(900px 520px at 8% -8%, #e8e3ff 0%, transparent 60%),
+    radial-gradient(900px 520px at 96% 0%, #d9f6ff 0%, transparent 55%),
+    linear-gradient(180deg,#f6f8fd 0%, #f2f5fb 100%);
+  line-height:1.65;
+}
+a{color:var(--brand);text-decoration:none}
+.wrap{max-width:1320px;margin:0 auto;padding:0 28px}
+/* ---------------- 顶栏 ---------------- */
+header.top{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(14px);
+  background:rgba(255,255,255,.82);
+  border-bottom:1px solid rgba(214,222,238,.8);
+}
+.top-in{max-width:1320px;margin:0 auto;padding:10px 28px;display:flex;align-items:center;gap:18px}
+.logo{display:flex;flex-direction:column;line-height:1.15}
+.logo b{font-size:17px;letter-spacing:.01em}
+.logo span{font-size:11.5px;color:var(--muted)}
+.top nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.top nav a{font-size:13.5px;color:#45506b;padding:7px 11px;border-radius:9px}
+.top nav a:hover{background:var(--brand-soft);color:var(--brand)}
+.ver{font-size:11.5px;color:var(--brand);background:var(--brand-soft);border:1px solid #ddd3ff;border-radius:999px;padding:3px 10px;white-space:nowrap}
+/* ---------------- 封面 ---------------- */
+.hero{padding:56px 0 20px}
+.hero h1{font-size:40px;line-height:1.22;margin:0 0 10px;letter-spacing:-.02em}
+.hero h1 small{display:block;font-size:15px;font-weight:400;color:var(--muted);margin-top:10px;letter-spacing:0}
+.hero p.lead{font-size:15.5px;color:#4a5670;max-width:880px;margin:0 0 18px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 6px}
+.chip{font-size:12.5px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:5px 12px;color:#3f4a63;box-shadow:0 2px 6px rgba(55,63,110,.04)}
+.chip b{color:var(--brand)}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0 6px}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.qcard .k{font-size:26px;font-weight:700;color:var(--brand)}
+.qcard .l{font-size:12.5px;color:var(--muted);margin-top:2px}
+.qcard .d{font-size:11.5px;color:#8b94a8;margin-top:6px}
+.howto{margin:26px 0 4px;background:linear-gradient(90deg,#f5f1ff,#f0f7ff);border:1px solid #e2dbfb;border-radius:14px;padding:12px 16px;font-size:13px;color:#4a4570}
+/* ---------------- 通用 ---------------- */
+section{padding:38px 0}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.sec-head .idx{font-size:12px;color:var(--brand);background:var(--brand-soft);border-radius:8px;padding:3px 9px;font-weight:600}
+.sec-head h2{font-size:26px;margin:0;letter-spacing:-.01em}
+.sec-head p{margin:0;color:var(--muted);font-size:13.5px}
+.sec-desc{color:#4a5670;font-size:14px;max-width:960px;margin:6px 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+h3.block{font-size:16.5px;margin:0 0 8px}
+.mini{font-size:12.5px;color:var(--muted)}
+.tag{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:#fafbff;margin-left:6px;vertical-align:2px}
+.tag.g{color:var(--green);background:var(--green-soft);border-color:#c9ecd9}
+.tag.a{color:var(--amber);background:var(--amber-soft);border-color:#f0dcb7}
+.tag.r{color:var(--red);background:var(--red-soft);border-color:#f3cccc}
+.tag.b{color:var(--brand);background:var(--brand-soft);border-color:#ddd3ff}
+/* ---------------- 模拟系统 ---------------- */
+.sim-shell{position:relative}
+.sim-tip{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#5d6780;margin:0 0 12px}
+.sim-tip .dot{width:9px;height:9px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 4px rgba(109,75,255,.14)}
+.app-frame{background:#eef2f8;border:1px solid #d8e0ec;border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(48,58,110,.16)}
+.app-titlebar{height:42px;display:flex;align-items:center;gap:10px;padding:0 14px;background:linear-gradient(180deg,#ffffff,#f4f7fc);border-bottom:1px solid #e2e8f2}
+.traffic{display:flex;gap:6px}.traffic i{width:10px;height:10px;border-radius:50%;display:block}
+.traffic i:nth-child(1){background:#ff6b6b}.traffic i:nth-child(2){background:#ffc94d}.traffic i:nth-child(3){background:#51d08a}
+.app-brand{display:flex;flex-direction:column;line-height:1.1;font-size:12px;color:#2b3142}
+.app-brand span{font-size:10px;color:#9aa3b8}
+.app-titlebar .right{margin-left:auto;display:flex;gap:8px;align-items:center;font-size:10.5px;color:#8b94a8}
+.app-body{display:flex;min-height:640px;background:#f6f8fd}
+.app-nav{width:158px;flex:0 0 158px;padding:14px 10px;background:rgba(255,255,255,.55);border-right:1px solid #e5eaf5;display:flex;flex-direction:column;gap:6px}
+.nav-item{font-size:12.5px;color:#5a6480;padding:9px 11px;border-radius:10px;cursor:pointer;border:1px solid transparent;transition:.15s}
+.nav-item:hover{background:#fff;color:var(--brand)}
+.nav-item.on{background:var(--brand-soft);border-color:#ddd3ff;color:#3b2c8f;font-weight:600}
+.app-nav .spacer{flex:1}
+.app-main{flex:1;padding:14px 16px;min-width:0}
+.page{display:none}.page.on{display:block}
+.mock-title{font-size:20px;font-weight:700;margin:2px 0 8px;letter-spacing:-.01em}
+.mock-title small{font-size:11px;font-weight:400;color:#98a1b4;margin-left:8px}
+.stat-row{display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin:8px 0}
+.stat{background:#fff;border:1px solid #e4e9f4;border-radius:9px;padding:7px 8px}
+.stat .l{font-size:9.5px;color:#98a1b4}
+.stat .v{font-size:15px;font-weight:700;color:var(--brand);line-height:1.3}
+.stat .s{font-size:8.5px;color:#a9b1c4}
+.filterbar{background:#fff;border:1px solid #e4e9f4;border-radius:11px;padding:8px 10px;display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;font-size:10.5px;color:#5a6480;align-items:center}
+.fld{border:1px solid #dfe5f0;background:#f8faff;border-radius:7px;padding:3px 8px;color:#3f4a63}
+.btn{border:1px solid #dfe5f0;background:#fff;border-radius:8px;padding:4px 10px;font-size:10.5px;color:#3f4a63;cursor:pointer}
+.btn:hover{border-color:#c9d4ea;background:#f8faff}
+.btn.primary{background:linear-gradient(135deg,#7b5cff,#9d83ff);border-color:#7b5cff;color:#fff;font-weight:600}
+.btn.gold{background:linear-gradient(180deg,#fffdf5,#fbf1d0);border:1.2px solid #d3a93f;color:transparent;position:relative;font-weight:700}
+.btn.gold::after{content:"爆单一铲";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff3ae,#f3c33f 42%,#d99b12 78%,#a96c08);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.chart{background:#fff;border:1px solid #e4e9f4;border-radius:11px;padding:10px 12px}
+.chart .t{font-size:11.5px;font-weight:700;color:#3d465e;margin-bottom:6px}
+.bars{display:flex;align-items:flex-end;gap:18px;height:110px;padding:0 6px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px}
+.bar .num{font-size:11px;font-weight:700;color:#3d465e}
+.bar .col{width:56%;border-radius:6px 6px 2px 2px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10.5px;font-weight:700}
+.bar .lab{font-size:10px;color:#98a1b4}
+.actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.mtable{width:100%;border-collapse:collapse;background:#fff;border:1px solid #e4e9f4;border-radius:11px;overflow:hidden;font-size:10.5px}
+.mtable th{background:#f1edff;color:#4c3f8f;font-weight:600;text-align:left;padding:7px 9px;border-bottom:1px solid #e4e9f4;white-space:nowrap}
+.mtable td{padding:7px 9px;border-bottom:1px solid #eef2f9;color:#3f4a63;white-space:nowrap}
+.mtable tr:last-child td{border-bottom:none}
+.mtable tr:hover td{background:#fafbff}
+.badge{display:inline-block;font-size:10px;border-radius:999px;padding:1px 7px;border:1px solid #dfe5f0;background:#f8faff;color:#5a6480}
+.badge.g{background:var(--green-soft);border-color:#c9ecd9;color:var(--green)}
+.badge.r{background:var(--red-soft);border-color:#f3cccc;color:var(--red)}
+.badge.b{background:var(--brand-soft);border-color:#ddd3ff;color:var(--brand)}
+.badge.a{background:var(--amber-soft);border-color:#f0dcb7;color:var(--amber)}
+/* 爆单一铲弹窗模拟 */
+.copilot-modal{background:#fff;border:1px solid #dbe3f0;border-radius:14px;overflow:hidden;box-shadow:0 18px 50px rgba(40,48,90,.18)}
+.copilot-head{display:flex;align-items:center;gap:10px;padding:9px 14px;background:linear-gradient(90deg,#fbfaff,#f4f8ff);border-bottom:1px solid #e7ecf6;font-size:12px}
+.copilot-head b{font-size:13px}
+.copilot-head .fld{margin-left:auto}
+.copilot-body{display:flex;min-height:420px}
+.copilot-side{width:150px;flex:0 0 150px;padding:10px;background:#f7f9fd;border-right:1px solid #e9eef7}
+.side-btn{background:linear-gradient(135deg,#7b5cff,#9d83ff);color:#fff;border-radius:9px;padding:6px 10px;font-size:11px;text-align:center;font-weight:600}
+.side-list{margin-top:10px;font-size:10.5px;color:#5a6480}
+.side-list div{padding:5px 7px;border-radius:7px}
+.side-list div.on{background:#eee9ff;color:#3b2c8f}
+.copilot-main2{flex:1;padding:10px 12px;display:flex;flex-direction:column;gap:8px;min-width:0;background:#f7f8fa}
+.chatline{display:flex;gap:8px;align-items:flex-start;font-size:11px}
+.avatar{width:26px;height:26px;border-radius:50%;flex:0 0 26px;display:flex;align-items:center;justify-content:center;font-size:13px;background:#fff;border:1px solid #e8d9ab;color:#8a6d1f}
+.avatar.me{background:#b7c3d4;color:#fff;border:none;font-size:10.5px;font-weight:700}
+.chatline .body{flex:1;min-width:0}
+.chatline .who{font-size:9.5px;color:#98a1b4;margin-bottom:2px}
+.chatline .bubble{background:#fff;border-radius:9px;padding:8px 10px;color:#2b3142;line-height:1.6}
+.chatline.me{flex-direction:row-reverse}
+.chatline.me .bubble{background:#95ec69;color:#14330f}
+.chatline.me .who{text-align:right}
+.think{border-left:2px solid #dfe4ec;color:#97a0ad;font-size:10px;padding:2px 8px;margin:2px 0 4px 34px}
+.caps{display:flex;gap:6px;flex-wrap:wrap;font-size:10.5px;color:#5a6480}
+.caps span{border:1px solid #e3e8f4;background:#fff;border-radius:999px;padding:3px 9px}
+.inputbox{border:1px solid #dfe5f0;background:#fff;border-radius:10px;padding:8px 10px;font-size:10.5px;color:#98a1b4;min-height:46px}
+/* hotspot */
+.hs{position:relative;cursor:pointer;outline:none}
+.hs::after{content:"";position:absolute;inset:-3px;border:1px dashed rgba(109,75,255,.55);border-radius:10px;opacity:0;transition:.15s;pointer-events:none}
+.hs:hover::after{opacity:1}
+.hs:hover{filter:brightness(.99)}
+/* ---------------- 功能索引 ---------------- */
+.search{display:flex;gap:8px;align-items:center;margin:6px 0 14px}
+.search input{flex:1;max-width:420px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13.5px;background:#fff;outline:none}
+.search input:focus{border-color:var(--brand2);box-shadow:0 0 0 3px rgba(109,75,255,.12)}
+.fgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.fcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;transition:.15s;box-shadow:0 4px 14px rgba(55,63,110,.05)}
+.fcard:hover{transform:translateY(-2px);border-color:#cfc4ff;box-shadow:0 10px 26px rgba(80,64,180,.14)}
+.fcard b{font-size:13.5px;display:block;margin-bottom:4px}
+.fcard small{font-size:11.5px;color:var(--muted);display:block;line-height:1.5}
+/* ---------------- 使用说明 steps ---------------- */
+.steps{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:10px 0 4px}
+.step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;position:relative}
+.step .n{width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;font-size:11.5px;display:flex;align-items:center;justify-content:center;font-weight:700;margin-bottom:6px}
+.step b{font-size:12.5px}
+.step p{font-size:11.5px;color:var(--muted);margin:4px 0 0;line-height:1.55}
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.note-card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px 16px}
+.note-card h4{margin:0 0 6px;font-size:13.5px}
+.note-card ul{margin:0;padding-left:18px;font-size:12.5px;color:#47526c}
+.note-card li{margin:3px 0}
+kbd{font-family:Consolas,Menlo,monospace;font-size:11px;background:#f3f5fa;border:1px solid #e0e6f1;border-bottom-width:2px;border-radius:5px;padding:0 5px;color:#3f4a63}
+/* ---------------- 架构 ---------------- */
+.arch{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap;margin:8px 0 4px}
+.node{flex:1;min-width:132px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;position:relative}
+.node b{font-size:12.5px;display:block}
+.node small{font-size:10.8px;color:var(--muted);display:block;margin-top:3px;line-height:1.45}
+.node.arrow::after{content:"→";position:absolute;right:-13px;top:38%;color:#b8c2d8;font-size:15px;z-index:2}
+.layers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.layer{border-radius:12px;padding:12px 14px;border:1px solid var(--line);background:#fff}
+.layer h4{margin:0 0 5px;font-size:13px}
+.layer p{margin:0;font-size:11.8px;color:#4c5873;line-height:1.6}
+.layer.l0{background:linear-gradient(135deg,#f1fff7,#ffffff);border-color:#ccebd9}
+.layer.l1{background:linear-gradient(135deg,#f5f2ff,#ffffff);border-color:#ddd3ff}
+.layer.l2{background:linear-gradient(135deg,#fffaf0,#ffffff);border-color:#f0dcb7}
+.codebox{background:#0f1424;color:#d6e2ff;border-radius:12px;padding:14px 16px;font-family:Consolas,Menlo,monospace;font-size:11.8px;line-height:1.7;overflow:auto}
+.codebox .c{color:#7c8bb0}
+.codebox .k{color:#ffd479}
+/* ---------------- 规则 ---------------- */
+.rulegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.rule{background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px 16px}
+.rule h4{margin:0 0 6px;font-size:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rule p{margin:4px 0;font-size:12.5px;color:#47526c}
+.rule ul{margin:6px 0 0;padding-left:18px;font-size:12.2px;color:#4c5873}
+.rule li{margin:3px 0}
+table.tbl{width:100%;border-collapse:collapse;font-size:12.3px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+table.tbl th{background:#f1edff;color:#4c3f8f;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);font-size:12px}
+table.tbl td{padding:8px 10px;border-bottom:1px solid #eef2f9;color:#3f4a63;vertical-align:top}
+table.tbl tr:last-child td{border-bottom:none}
+table.tbl td b{color:#2b3142}
+.hl{background:linear-gradient(180deg,transparent 62%,#ffe9a8 62%);padding:0 2px}
+.formula{font-family:Consolas,Menlo,monospace;font-size:12.3px;background:#f7f9fd;border:1px dashed #d8e0ec;border-radius:10px;padding:10px 12px;color:#3f4a63}
+/* ---------------- 部署 / FAQ / 版本 ---------------- */
+.deploy{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.plat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.plat h4{margin:0 0 6px;font-size:15px}
+.plat ol{margin:6px 0 0;padding-left:18px;font-size:12.5px;color:#47526c}
+.plat li{margin:4px 0}
+.faq{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.qa{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.qa b{font-size:13px;display:block;margin-bottom:4px}
+.qa p{margin:0;font-size:12.3px;color:#4c5873}
+.timeline{border-left:2px solid #e0e6f2;margin-left:8px;padding-left:18px}
+.tl{position:relative;padding:0 0 14px}
+.tl::before{content:"";position:absolute;left:-25px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 4px #efeaff}
+.tl b{font-size:13px}.tl span{font-size:11.5px;color:var(--muted);margin-left:8px}
+.tl p{margin:3px 0 0;font-size:12.3px;color:#4c5873}
+footer{padding:34px 0 46px;color:#8b94a8;font-size:12px}
+/* ---------------- 说明抽屉 ---------------- */
+.overlay{position:fixed;inset:0;background:rgba(24,28,45,.42);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:.2s;z-index:80}
+.overlay.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(520px,92vw);background:#fff;z-index:90;transform:translateX(104%);transition:transform .24s ease;box-shadow:-24px 0 60px rgba(30,36,70,.22);display:flex;flex-direction:column}
+.drawer.on{transform:translateX(0)}
+.drawer-head{padding:16px 18px;border-bottom:1px solid #edf0f7;display:flex;align-items:flex-start;gap:10px}
+.drawer-head .t{flex:1}
+.drawer-head h3{margin:0;font-size:16.5px}
+.drawer-head .sub{font-size:12px;color:var(--muted);margin-top:2px}
+.drawer-close{border:none;background:#f3f5fa;border-radius:9px;width:32px;height:32px;font-size:16px;cursor:pointer;color:#5a6480}
+.drawer-close:hover{background:#eceff7}
+.drawer-body{padding:16px 18px;overflow:auto;font-size:13px;color:#3f4a63}
+.drawer-body h4{margin:14px 0 6px;font-size:13px;color:#2b3142}
+.drawer-body h4:first-child{margin-top:0}
+.drawer-body ul,.drawer-body ol{margin:4px 0;padding-left:20px}
+.drawer-body li{margin:4px 0;line-height:1.6}
+.drawer-body .kv{background:#f8faff;border:1px dashed #dbe3f0;border-radius:10px;padding:9px 11px;margin:6px 0;font-size:12.3px}
+.drawer-body .kv b{color:#4c3f8f}
+.drawer-foot{padding:10px 18px;border-top:1px solid #edf0f7;display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:#98a1b4}
+.drawer-foot button{border:1px solid #dfe5f0;background:#fff;border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer}
+/* 响应式 */
+@media (max-width:1080px){
+  .quick,.fgrid{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:repeat(3,1fr)}
+  .grid3,.layers,.notes,.deploy,.faq,.rulegrid,.grid2,.chart-row{grid-template-columns:1fr}
+  .stat-row{grid-template-columns:repeat(3,1fr)}
+}
+@media print{
+  header.top,.overlay,.drawer,.sim-tip{display:none!important}
+  body{background:#fff}
+  .card,.app-frame{box-shadow:none}
+  section{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="logo">
+      <b>全量自动化客服质检系统</b>
+      <span>爆单一铲 · 客服会话规则、智能与人工复核工作台</span>
+    </div>
+    <nav>
+      <a href="#sim">模拟界面</a>
+      <a href="#usage">使用说明</a>
+      <a href="#arch">系统框架</a>
+      <a href="#rules">规则细分</a>
+      <a href="#score">评分体系</a>
+      <a href="#deploy">部署</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <span class="ver">v5.2.0</span>
+  </div>
+</header>
+
+<main>
+<!-- ==================== 封面 ==================== -->
+<section class="hero wrap" id="top">
+  <h1>系统总览
+    <small>一份文档看懂：系统长什么样、怎么用、如何运转、规则怎么判。点击模拟界面的任意高亮区域，即可查看对应功能说明。</small>
+  </h1>
+  <p class="lead">本文档由三部分组成：<b>① 使用说明</b>（导入 → 质检 → 复核 → 电销 → AI 副驾）、<b>② 系统框架</b>（数据流、模块、技术栈、AI 三层架构）、<b>③ 规则细分</b>（阶段、有效性、A/B/C 商机、必问、评分、评级、致命项、留资、去重）。另补充评分体系、部署与跨平台、常见问题、版本记录四部分。</p>
+  <div class="chips">
+    <span class="chip"><b>PyQt6</b> 桌面应用</span>
+    <span class="chip"><b>SQLite</b> 本地库</span>
+    <span class="chip"><b>规则引擎</b> A/B/C 商机 + 六维评分</span>
+    <span class="chip"><b>AI 副驾</b> 卡片 / 全文 / SQL</span>
+    <span class="chip"><b>跨平台</b> Windows 即用 · macOS 一键构建</span>
+  </div>
+  <div class="quick">
+    <div class="qcard"><div class="k">5</div><div class="l">主功能页 + 1 个 AI 副驾</div><div class="d">数据导入 / 质检总览 / 人工复核 / 电销跟进 / 智能设置</div></div>
+    <div class="qcard"><div class="k">6</div><div class="l">质检评分维度</div><div class="d">响应速度·必问·话术·问题解决·留资·优惠触达</div></div>
+    <div class="qcard"><div class="k">3</div><div class="l">AI 上下文层</div><div class="d">L0 SQL 全量统计 · L1 会话卡片 · L2 全文精读</div></div>
+    <div class="qcard"><div class="k">0</div><div class="l">需要云端部署</div><div class="d">本地数据库与配置，解压即用</div></div>
+  </div>
+  <div class="howto">💡 怎么读这份文档：先点下方「模拟界面」逐页点高亮区；再看「使用说明」按步骤操作；最后查「规则细分」确认判定口径。所有黄色高亮、虚线框、按钮都可以点。</div>
+</section>
+
+<!-- ==================== 一、模拟界面 ==================== -->
+<section class="wrap" id="sim">
+  <div class="sec-head"><span class="idx">一</span><h2>模拟界面 · 点击查看功能说明</h2><p>下面是按真实系统重绘的界面（非截图），可切换页面、点击任意高亮区域</p></div>
+  <div class="sim-tip"><span class="dot"></span>提示：点击左侧导航切换页面；点击带虚线高亮的区块、按钮、表格行，右侧会弹出该功能的用途、操作步骤和规则位置。</div>
+
+  <div class="app-frame">
+    <div class="app-titlebar">
+      <div class="traffic"><i></i><i></i><i></i></div>
+      <div class="app-brand"><b>全量自动化客服质检系统</b><span>爆单一铲 · 客服会话规则、智能与人工复核工作台</span></div>
+      <div class="right"><span>主题 ☾</span></div>
+    </div>
+    <div class="app-body">
+      <div class="app-nav">
+        <div class="nav-item" data-page="import" data-tip="nav-import">数据导入</div>
+        <div class="nav-item on" data-page="overview" data-tip="nav-overview">质检总览</div>
+        <div class="nav-item" data-page="review" data-tip="nav-review">人工复核</div>
+        <div class="nav-item" data-page="tele" data-tip="nav-tele">电销跟进</div>
+        <div class="nav-item" data-page="copilot" data-tip="nav-copilot">爆单一铲（弹窗）</div>
+        <div class="spacer"></div>
+        <div class="nav-item" data-page="ai" data-tip="nav-ai">智能设置</div>
+      </div>
+
+      <div class="app-main">
+        <!-- 数据导入 -->
+        <div class="page" data-page="import">
+          <div class="mock-title">数据导入 <small>支持跨店铺、多批次累积</small></div>
+          <div class="filterbar hs" data-tip="import-store">
+            <span>店铺</span><span class="fld">品牌B</span>
+            <span class="mini">切换店铺后可分别导入各自日志与 Excel</span>
+          </div>
+          <div class="card" style="padding:12px 14px;margin:10px 0">
+            <div class="grid2">
+              <div class="hs" data-tip="import-log"><b style="font-size:12.5px">客服日志（.log / .txt）</b><div class="mini" style="margin-top:4px">选择文件…</div></div>
+              <div class="hs" data-tip="import-excel"><b style="font-size:12.5px">咨询记录（.xlsx）</b><div class="mini" style="margin-top:4px">选择文件…</div></div>
+            </div>
+            <div class="actions" style="margin-top:10px">
+              <span class="btn primary hs" data-tip="import-run">开始导入</span>
+              <span class="btn hs" data-tip="import-manage">管理店铺</span>
+              <span class="mini">匹配规则：同一客户 + 时间窗 + 咨询类型，未匹配会话独立保留</span>
+            </div>
+          </div>
+          <div class="mock-title" style="font-size:13px">历史批次 <small>可编辑店铺/备注，也可删除批次（连带会话与质检结果）</small></div>
+          <table class="mtable hs" data-tip="import-batch-table">
+            <thead><tr><th>批次</th><th>店铺</th><th>导入时间</th><th>数据范围</th><th>会话数</th><th>匹配数</th></tr></thead>
+            <tbody>
+              <tr><td>batch-a1b2c3d4</td><td>品牌B</td><td>2026-10-29 10:02</td><td>2026-09-22 ~ 2026-10-20</td><td>26</td><td>26</td></tr>
+              <tr><td>batch-e5f6a7b8</td><td>品牌A 自营</td><td>2026-10-21 16:40</td><td>2026-10-01 ~ 2026-10-18</td><td>5</td><td>5</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 质检总览 -->
+        <div class="page on" data-page="overview">
+          <div class="mock-title" style="display:flex;align-items:center">质检总览 <small style="margin-left:8px">统计 · 筛选 · 图表 · 明细 · 批量操作</small><span class="fld" style="margin-left:auto;font-size:10.5px">看板角色：运营 ▾ / 客服</span></div>
+          <div class="stat-row hs" data-tip="overview-stats">
+            <div class="stat"><div class="l">总咨询</div><div class="v">20</div><div class="s">当前筛选结果</div></div>
+            <div class="stat"><div class="l">售前</div><div class="v">19</div><div class="s">占 95.0%</div></div>
+            <div class="stat"><div class="l">售后</div><div class="v">1</div><div class="s">占 5.0%</div></div>
+            <div class="stat"><div class="l">有效</div><div class="v">15</div><div class="s">占 75.0%</div></div>
+            <div class="stat"><div class="l">A 级</div><div class="v">5</div><div class="s">占 25.0%</div></div>
+            <div class="stat"><div class="l">B 级</div><div class="v">4</div><div class="s">占 20.0%</div></div>
+            <div class="stat"><div class="l">C 级</div><div class="v">5</div><div class="s">占 25.0%</div></div>
+            <div class="stat"><div class="l">电销线索</div><div class="v">3</div><div class="s">占 15.0%</div></div>
+            <div class="stat"><div class="l">售前平均分</div><div class="v">75.8</div><div class="s">满分 100</div></div>
+          </div>
+
+          <div class="filterbar hs" data-tip="overview-filters" style="margin-bottom:6px">
+            <span>搜索</span><span class="fld hs" data-tip="overview-search" style="min-width:260px;color:#8a94a8">搜客户名 / 账号 / 客服 / 商品 / 聊天内容</span>
+            <span class="mini">输入即筛选，多关键词用空格分隔</span>
+          </div>
+          <div class="filterbar hs" data-tip="overview-filters">
+            <span>店铺</span><span class="fld">全部</span><span>客服</span><span class="fld">全部</span><span>产品</span><span class="fld">全部</span><span>阶段</span><span class="fld">全部</span><span>商机</span><span class="fld">全部</span>
+            <span>有效</span><span class="fld">全部</span><span>分数</span><span class="fld">全部</span><span>扣分</span><span class="fld">全部</span>
+            <span class="fld hs" data-tip="overview-merge">☑ 按客户合并（一人一条）</span>
+            <span class="btn hs" data-tip="overview-clear">清除筛选</span>
+            <span>开始</span><span class="fld">2026-09-22</span><span>结束</span><span class="fld">2026-10-20</span>
+            <span class="mini hs" data-tip="overview-red">浅红行 = 待复核</span>
+          </div>
+
+          <div class="chart-row">
+            <div class="chart hs" data-tip="overview-chart-lead">
+              <div class="t">商机等级分布 · 点击柱子可筛选</div>
+              <div class="bars">
+                <div class="bar"><div class="num">5</div><div class="col" style="height:72px;background:#b79bff">36%</div><div class="lab">A 级</div></div>
+                <div class="bar"><div class="num">4</div><div class="col" style="height:58px;background:#38e8ff">29%</div><div class="lab">B 级</div></div>
+                <div class="bar"><div class="num">5</div><div class="col" style="height:72px;background:#888780">36%</div><div class="lab">C 级</div></div>
+                <div class="bar"><div class="num">6</div><div class="col" style="height:86px;background:#cfd6e4">无</div><div class="lab">未分级</div></div>
+              </div>
+            </div>
+            <div class="chart hs" data-tip="overview-chart-score">
+              <div class="t">售前评分分布 · 数量在柱顶、占比在柱内</div>
+              <div class="bars">
+                <div class="bar"><div class="num">2</div><div class="col" style="height:44px;background:#38e8ff">10%</div><div class="lab">60+</div></div>
+                <div class="bar"><div class="num">3</div><div class="col" style="height:60px;background:#7b5cff">15%</div><div class="lab">50-59</div></div>
+                <div class="bar"><div class="num">6</div><div class="col" style="height:86px;background:#b79bff">30%</div><div class="lab">40-49</div></div>
+                <div class="bar"><div class="num">9</div><div class="col" style="height:96px;background:#e24b4a">45%</div><div class="lab">&lt;40</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions hs" data-tip="overview-actions">
+            <span class="btn">智能批量质检可疑会话</span>
+            <span class="btn">全量智能质检</span>
+            <span class="btn">智能总结当前筛选</span>
+            <span class="btn">客服扣分率</span>
+            <span class="btn">按新标准重算评分</span>
+            <span class="btn hs" data-tip="scoring-standard">评分标准</span>
+            <span class="btn gold hs" data-tip="copilot-entry" style="min-width:96px"></span>
+            <span style="margin-left:auto" class="btn">导出 Excel</span>
+          </div>
+
+          <table class="mtable hs" data-tip="overview-table">
+            <thead><tr><th>时间</th><th>店铺</th><th>客服</th><th>客户</th><th>产品</th><th>商品名称</th><th>阶段</th><th>有效</th><th>商机</th><th>分数</th><th>智能判定</th><th>留资线索</th><th>跟进建议</th></tr></thead>
+            <tbody>
+              <tr><td>2026-09-22 23:08:31</td><td>品牌B</td><td>xiaoting</td><td>维娜婷only</td><td>MC65…</td><td>品牌B（brandA）…</td><td>售前</td><td><span class="badge r">无效</span></td><td>C</td><td>52</td><td><span class="badge b">智能：待复核</span></td><td>—</td><td>建议主动跟进…</td></tr>
+              <tr><td>2026-09-23 00:54:40</td><td>品牌B</td><td>yiyi</td><td>wfuxuehan</td><td>MC65…</td><td>品牌B（brandA）…</td><td>售前</td><td><span class="badge r">无效</span></td><td>A</td><td>70</td><td><span class="badge b">智能：合格</span></td><td>微信 130****…</td><td>标记电销线索…</td></tr>
+              <tr style="background:#FFF0F0"><td>2026-09-29 13:03:32</td><td>品牌B</td><td>yimei</td><td>中海321</td><td>MC65…</td><td>品牌B（brandA）…</td><td>售前</td><td><span class="badge g">有效</span></td><td>C</td><td>75</td><td><span class="badge b">智能：待复核</span></td><td>—</td><td>作为培育线索…</td></tr>
+            </tbody>
+          </table>
+          <div class="mini" style="margin-top:6px">双击行打开会话详情：聊天记录（精确到秒）、扣分明细、AI 建议改判、复核改分、复制客户名。浅红色行 = 待复核，复核完成后恢复白底。</div>
+        </div>
+
+        <!-- 人工复核 -->
+        <div class="page" data-page="review">
+          <div class="mock-title">人工复核 <small>规则可疑 & 待复核会话在这里确认/改判</small></div>
+          <div class="filterbar hs" data-tip="review-queue">
+            <span class="mini">规则初筛标记为可疑的会话在此确认或改判；双击行进入会话详情，可直接修改最终分并保存，保存后总览立即更新。致命项经人工确认后计 59 分并判不合格，所有操作写入审计日志。</span>
+            <span class="btn" style="margin-left:auto">刷新队列</span><span class="badge a">待复核 6 条</span>
+          </div>
+          <table class="mtable hs" data-tip="review-table">
+            <thead><tr><th>时间</th><th>客服</th><th>阶段</th><th>有效</th><th>商机</th><th>分数</th><th>原因</th><th>复核状态</th></tr></thead>
+            <tbody>
+              <tr><td>2026-09-22 23:08:31</td><td>xiaoting</td><td>售前</td><td>无效</td><td>C</td><td>52</td><td>客户跨天多次咨询</td><td><span class="badge a">待复核</span></td></tr>
+              <tr><td>2026-09-30 12:54:02</td><td>weijun</td><td>售前</td><td>有效</td><td>B</td><td>61</td><td>识别到售前咨询信号</td><td><span class="badge a">待复核</span></td></tr>
+            </tbody>
+          </table>
+          <div class="grid3" style="margin-top:12px">
+            <div class="card hs" data-tip="review-score" style="padding:12px"><b style="font-size:12.5px">人工最终分</b><div class="mini">0-100，可直接改分保存</div></div>
+            <div class="card hs" data-tip="review-fatal" style="padding:12px"><b style="font-size:12.5px">确认致命项</b><div class="mini">确认后 59 分 / 不合格</div></div>
+            <div class="card hs" data-tip="review-ai-adopt" style="padding:12px"><b style="font-size:12.5px">AI 建议改判</b><div class="mini">建议 + 人工一键采纳（可审计）</div></div>
+          </div>
+        </div>
+
+        <!-- 电销跟进 -->
+        <div class="page" data-page="tele">
+          <div class="mock-title">电销线索跟进 <small>留资线索汇总，可筛空白、可导出</small></div>
+          <div class="filterbar hs" data-tip="tele-filter">
+            <span>线索类型</span><span class="fld">全部</span>
+            <span class="mini">选项：全部 / 有留资 / 空白 / 电话 / 微信 / QQ / 邮箱 / 其他</span>
+            <span class="mini" style="margin-left:auto">共 3 条 / 全部 20 条（15.0%）</span>
+            <span class="btn hs" data-tip="tele-export">导出 Excel</span>
+          </div>
+          <table class="mtable hs" data-tip="tele-table">
+            <thead><tr><th>时间</th><th>店铺</th><th>客服</th><th>客户</th><th>产品</th><th>线索类型</th><th>留资线索</th><th>跟进建议</th></tr></thead>
+            <tbody>
+              <tr><td>2026-09-23 00:54:40</td><td>品牌B</td><td>yiyi</td><td>wfuxuehan</td><td>MC65…</td><td><span class="badge b">微信</span></td><td>130*******8</td><td>标记电销线索，尽快联系客户…</td></tr>
+              <tr><td>2026-09-30 12:54:02</td><td>品牌B</td><td>weijun</td><td>jd_pyocgs…</td><td>MC65…</td><td><span class="badge b">电话</span></td><td>138****5678</td><td>建议主动跟进，询问购买时间…</td></tr>
+              <tr><td>2026-09-29 13:03:32</td><td>品牌B</td><td>yimei</td><td>中海321</td><td>MC65…</td><td><span class="badge">—</span></td><td>—</td><td>作为培育线索，保留会话记录。</td></tr>
+            </tbody>
+          </table>
+          <div class="mini" style="margin-top:6px">客户把号码拆成多条消息发送（如 138 / 1234 / 5678）也能识别；双击行查看聊天详情。</div>
+        </div>
+
+        <!-- 爆单一铲 -->
+        <div class="page" data-page="copilot">
+          <div class="copilot-modal">
+            <div class="copilot-head">
+              <b>爆单一铲 · AI 质检副驾</b>
+              <span class="fld hs" data-tip="copilot-scope">数据范围：当前筛选</span>
+              <span class="fld hs" data-tip="copilot-readmode">阅读方式：卡片摘要</span>
+            </div>
+            <div class="copilot-body">
+              <div class="copilot-side hs" data-tip="copilot-side">
+                <div class="side-btn">＋ 新建对话</div>
+                <div class="side-list">
+                  <div class="on hs" data-tip="copilot-history">有没有客户留下联系方式</div>
+                  <div class="hs" data-tip="copilot-history">质保有没有说清</div>
+                  <div class="hs" data-tip="copilot-history-delete">（右键：删除对话 / Delete）</div>
+                </div>
+              </div>
+              <div class="copilot-main2">
+                <div class="chatline hs" data-tip="copilot-thinking">
+                  <div class="avatar">🪏</div>
+                  <div class="body">
+                    <div class="who">AI · 思考过程（已折叠，可点开）</div>
+                    <div class="think">已读取当前范围 26 条会话 · 已注入 26 条摘要 · 正在等待模型返回…</div>
+                    <div class="bubble">
+                      <b>### 结论</b><br>有 <b>1 位</b>客户留下了联系方式。<br><br>
+                      <b>### 依据</b><br>· [客户名] 客户说「加我微信 130*******8」<br><br>
+                      <b>### 建议</b><br>今天内回访并加微；话术见下。<br>
+                      【话术建议】您好，我是刚才的顾问，已加您微信，稍后把方案发您。
+                    </div>
+                  </div>
+                </div>
+                <div class="chatline me hs" data-tip="copilot-scope">
+                  <div class="avatar me">运</div>
+                  <div class="body"><div class="who">运营</div><div class="bubble">有没有客户留下联系方式？把原文贴出来</div></div>
+                </div>
+                <div class="think hs" data-tip="copilot-sql" style="margin-left:0">统计类问题自动走只读 SQL（示例）：SELECT stage AS 阶段, COUNT(*) FROM v GROUP BY stage</div>
+                <div class="caps hs" data-tip="copilot-capsules"><span>质保是否说清</span><span>会议室场景匹配</span><span>竞品对比是否得当</span><span>商机信号与探需</span><span>话术改写生成</span></div>
+                <div class="inputbox hs" data-tip="copilot-input">输入你的问题…（Enter 发送，Shift+Enter 换行；点上方胶囊可快速填入专业提问）</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 智能设置 -->
+        <div class="page" data-page="ai">
+          <div class="mock-title">智能设置 <small>公司智能入口，兼容常见对话协议</small></div>
+          <div class="card" style="padding:14px 16px;max-width:640px">
+            <div class="filterbar hs" data-tip="ai-config" style="margin:0 0 8px"><b style="font-size:11px">接口地址</b><span class="fld" style="margin-left:auto;min-width:260px">https://gateway.example.com/v1
+            <div class="filterbar hs" data-tip="ai-config" style="margin:0 0 8px"><b style="font-size:11px">模型名称</b><span class="fld" style="margin-left:auto;min-width:260px">默认模型</span></div>
+            <div class="filterbar hs" data-tip="ai-type" style="margin:0 0 8px"><b style="font-size:11px">协议类型</b><span class="fld" style="margin-left:auto;min-width:260px">对话接口 / 响应接口</span></div>
+            <div class="filterbar hs" data-tip="ai-key" style="margin:0 0 8px"><b style="font-size:11px">接口密钥</b><span class="fld" style="margin-left:auto;min-width:260px">••••••••••••</span></div>
+            <div class="actions">
+              <span class="btn hs" data-tip="ai-test">测试连接</span>
+              <span class="btn primary hs" data-tip="ai-config">保存配置</span>
+              <span class="mini">测试连接已改为后台执行，界面不再卡住（最长约 60 秒）</span>
+            </div>
+            <div class="mini" style="margin-top:6px">密钥只存本机 <code>config/ai_config.json</code>，不写进代码、不随安装包分发。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 功能索引 ==================== -->
+<section class="wrap" id="index">
+  <div class="sec-head"><span class="idx">速查</span><h2>功能索引</h2><p>按关键词搜索；点击卡片查看该功能说明</p></div>
+  <div class="search"><input id="fs" placeholder="输入关键词，如：导入、合并、扣分、留资、SQL、改判、删除…"><span class="mini" id="fc">共 0 项</span></div>
+  <div class="fgrid" id="fgrid"></div>
+</section>
+
+<!-- ==================== 二、使用说明 ==================== -->
+<section class="wrap" id="usage">
+  <div class="sec-head"><span class="idx">二</span><h2>使用说明</h2><p>从导入到产出，一条完整链路</p></div>
+  <div class="sec-desc">系统是本地桌面程序：数据、规则、AI 配置都在程序目录里；AI 质检与副驾按需调用公司智能接口，不使用 AI 也能完成规则质检、复核与导出。</div>
+  <div class="steps">
+    <div class="step hs" data-tip="usage-import"><div class="n">1</div><b>导入数据</b><p>选店铺 → 选日志 + Excel → 开始导入。支持多店铺累积，重复文件自动去重。</p></div>
+    <div class="step hs" data-tip="usage-qc"><div class="n">2</div><b>自动质检</b><p>解析会话 → 匹配 Excel → 规则判定阶段/有效性/商机 → 六维评分。</p></div>
+    <div class="step hs" data-tip="usage-review"><div class="n">3</div><b>人工复核</b><p>可疑会话进复核队列；可改分、确认致命项、采纳 AI 建议改判。</p></div>
+    <div class="step hs" data-tip="usage-tele"><div class="n">4</div><b>电销跟进</b><p>自动汇总留资线索，可按类型/空白筛选，一键导出 Excel 分给销售。</p></div>
+    <div class="step hs" data-tip="usage-copilot"><div class="n">5</div><b>AI 副驾</b><p>从总览点「爆单一铲」，用自然语言查数据、找问题、生成话术。</p></div>
+    <div class="step hs" data-tip="usage-export"><div class="n">6</div><b>导出与复盘</b><p>总览/电销导出 Excel；按客服看扣分率；定期重算评分与校准规则。</p></div>
+  </div>
+  <div class="notes">
+    <div class="note-card">
+      <h4>常用操作清单</h4>
+      <ul>
+        <li><b>筛选</b>：店铺/客服/产品/阶段/商机/有效/分数/扣分 + 日期；「按客户合并」默认开启。</li>
+        <li><b>搜客户</b>：总览顶部搜索框输入客户名/账号/聊天关键词，输入即筛；双击结果行看聊天记录。</li>
+        <li><b>看详情</b>：双击表格行；聊天记录精确到秒，可复制客户名。</li>
+        <li><b>只看某类扣分</b>：扣分下拉选「响应速度扣分 / 售前必问扣分 / 引导留资扣分…」。</li>
+        <li><b>算扣分率</b>：总览点「客服扣分率」，按有扣分咨询占比排序。</li>
+        <li><b>重算评分</b>：改过 <code>scoring.yaml</code> 后点「按新标准重算评分」。</li>
+        <li><b>删除聊天历史</b>：爆单一铲左侧列表右键 → 删除；或选中后按 Delete。</li>
+      </ul>
+    </div>
+    <div class="note-card">
+      <h4>快捷键与小技巧</h4>
+      <ul>
+        <li><b>Enter</b> 发送 AI 问题，<b>Shift+Enter</b> 换行；生成中可点「停止」。</li>
+        <li>聊天时间「时:分:秒」点击可切换完整日期时间。</li>
+        <li>表格列宽可拖动；表头不换行，长内容悬停看全文。</li>
+        <li>深色主题保留在右上角 ☾，但所有详情/弹窗仍是浅色，避免看不清。</li>
+        <li>导入前先确认店铺名称，客服筛选与店铺数据绑定展示。</li>
+        <li>AI 调用有成本：先小范围筛，再用全文精读；量大时优先 SQL/卡片。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 三、系统框架 ==================== -->
+<section class="wrap" id="arch">
+  <div class="sec-head"><span class="idx">三</span><h2>系统框架</h2><p>数据怎么流动、模块怎么分工、AI 怎么用</p></div>
+  <div class="sec-desc">单机桌面应用：Python + PyQt6 负责界面，SQLite 负责存储，规则/评分各自独立成模块，配置全部外置为 YAML/JSON，改规则不用改代码。</div>
+
+  <div class="arch">
+    <div class="node arrow hs" data-tip="arch-import"><b>数据导入</b><small>日志解析 · Excel 匹配 · 批次去重</small></div>
+    <div class="node arrow hs" data-tip="arch-parse"><b>解析 / 归一</b><small>会话切分 · 角色识别 · 消息清洗</small></div>
+    <div class="node arrow hs" data-tip="arch-match"><b>标签匹配</b><small>客户+时间窗+咨询类型</small></div>
+    <div class="node arrow hs" data-tip="arch-rules"><b>规则引擎</b><small>阶段 · 有效性 · A/B/C · 必问</small></div>
+    <div class="node arrow hs" data-tip="arch-score"><b>评分引擎</b><small>六维倒扣 · 评级 · 致命项</small></div>
+    <div class="node arrow hs" data-tip="arch-db"><b>SQLite</b><small>会话/结果/批次/缓存/审计</small></div>
+    <div class="node hs" data-tip="arch-ui"><b>PyQt6 界面</b><small>总览 · 复核 · 电销 · AI 副驾</small></div>
+  </div>
+
+  <div class="grid3" style="margin-top:16px">
+    <div class="card hs" data-tip="arch-config" style="padding:14px 16px"><h3 class="block">配置驱动</h3><div class="mini">规则、评分、产品库、角色、胶囊都外置；改完生效/重算，不用发版。</div></div>
+    <div class="card hs" data-tip="arch-audit" style="padding:14px 16px"><h3 class="block">可追溯</h3><div class="mini">导入/复核/改判/采纳 AI 建议全部写审计日志（audit_log）。</div></div>
+    <div class="card hs" data-tip="arch-cross" style="padding:14px 16px"><h3 class="block">跨平台</h3><div class="mini">Windows 绿色包双击即用；macOS 用脚本生成独立 .app，同样免装 Python。</div></div>
+  </div>
+
+  <h3 class="block" style="margin-top:24px">AI 三层上下文架构（控制成本 + 保证相关）</h3>
+  <div class="layers">
+    <div class="layer l0 hs" data-tip="arch-ai-l0"><h4>L0 · SQL 全量统计</h4><p>数量、占比、排名、趋势、某类会话有多少：模型只写只读 SQL，本地全量算，数字精确、几乎不耗 token。</p></div>
+    <div class="layer l1 hs" data-tip="arch-ai-l1"><h4>L1 · 会话卡片（默认）</h4><p>每条会话压成一行摘要（客服/产品/阶段/商机/首响/关键句），批量注入；超 200 条可选全量分批或快速分析。</p></div>
+    <div class="layer l2 hs" data-tip="arch-ai-l2"><h4>L2 · 全文精读</h4><p>需要核对联系方式、承诺细节时，按约 2.2 万字/批读完整对话，逐批提炼再合并，覆盖全部、可停止。</p></div>
+  </div>
+
+  <h3 class="block" style="margin-top:24px">目录结构（程序所在文件夹）</h3>
+  <div class="codebox">
+<span class="c"># 核心文件</span>
+app.py                    <span class="c"># PyQt6 界面与交互（总览/复核/电销/爆单一铲）</span>
+src/qc_engine/
+  parser/                 <span class="c"># log 解析、Excel 解析（含无标记日志兜底切分）</span>
+  matcher.py / model_matcher.py
+  rules/engine.py         <span class="c"># 阶段/有效性/A-B-C/必问/留资识别</span>
+  quality/scoring.py      <span class="c"># 六维倒扣分、评级、致命项</span>
+  ai/client.py            <span class="c"># AI 质检（chat_completions / responses）</span>
+  ai/copilot.py           <span class="c"># 爆单一铲：卡片/全文/流式</span>
+  ai/stats.py             <span class="c"># Text-to-SQL 只读统计</span>
+  services/runner.py      <span class="c"># 导入流水线、AI 批量、重算评分</span>
+  storage/database.py     <span class="c"># SQLite 表、迁移、审计</span>
+<span class="c"># 可改的配置（不用改代码）</span>
+config/config.yaml        <span class="c"># 店铺、数据库路径、应用信息</span>
+config/rules.yaml         <span class="c"># 关键词/阈值/阶段/商机/必问</span>
+config/scoring.yaml       <span class="c"># 六维评分与评级（scoring-v0.3.0）</span>
+config/products.yaml      <span class="c"># 产品型号库</span>
+config/roles.yaml         <span class="c"># 客服/机器人账号</span>
+templates/capsules.json   <span class="c"># 爆单一铲提示词胶囊</span>
+data/qc.db                <span class="c"># 本地数据库（会话/结果/审计）</span>
+  </div>
+</section>
+
+<!-- ==================== 四、规则细分 ==================== -->
+<section class="wrap" id="rules">
+  <div class="sec-head"><span class="idx">四</span><h2>规则细分</h2><p>每一条判定口径与来源</p></div>
+  <div class="sec-desc">规则 = 可解释的确定性判断：先判阶段与有效性，再判商机等级，最后六维评分。所有关键词都来自 <code>config/rules.yaml</code> 与 <code>config/scoring.yaml</code>，改配置即可调口径。</div>
+
+  <div class="rulegrid">
+    <div class="rule hs" data-tip="rule-stage"><h4>① 售前 / 售后 / 待复核<span class="tag b">rules.yaml</span></h4>
+      <p>命中售后关键词（安装、维修、退货、订单、物流、保修、故障…）且无售前信号 → <b>售后</b>；命中售前信号 → <b>售前</b>；两者混合按售前处理并留复核。</p>
+      <ul><li>售后：只记录、不参与售前评分与 A/B/C 评定。</li><li>待复核：信号不足或冲突时进入人工队列。</li></ul>
+    </div>
+    <div class="rule hs" data-tip="rule-valid"><h4>② 有效 / 无效<span class="tag b">rules.yaml</span></h4>
+      <p>短会话（≤5 条消息）且客户没有实质问题 → <b>无效</b>；但命中联系方式、购买意向、比价、产品对比等信号时不判无效。</p>
+      <ul><li>无效会话不进评分，只保留记录与导出。</li><li>有效性可被人工复核或采纳 AI 建议改判。</li></ul>
+    </div>
+    <div class="rule hs" data-tip="rule-lead"><h4>③ A / B / C 商机<span class="tag b">rules.yaml</span></h4>
+      <p><b>A</b>：明确购买/砍价/近期购买/留联系方式；<b>B</b>：竞品对比/购买计划/复购；<b>C</b>：跨天多次咨询、客户消息数≥5 等弱信号。</p>
+      <ul><li>留联系方式直接判 A 级并标记电销线索。</li><li>合并模式下同一客户多次咨询取最高等级。</li></ul>
+    </div>
+    <div class="rule hs" data-tip="rule-questions"><h4>④ 售前必问三组<span class="tag b">rules.yaml</span></h4>
+      <p>会议室大小/人数、视频会议需求、使用场景。<b>客户主动说了也算覆盖</b>，按客服与客户消息里的关键词综合判断。</p>
+      <ul><li>覆盖 3 组不扣分；2 组扣 6；1 组扣 12；0 组扣 24。</li></ul>
+    </div>
+    <div class="rule hs" data-tip="rule-fatal"><h4>⑤ 致命项<span class="tag a">人工确认</span></h4>
+      <p>辱骂、私下交易诱导、泄露敏感信息、虚假承诺、恶意推诿等关键词命中 → 标记「致命候选」，<b>必须人工确认</b>。</p>
+      <ul><li>确认后最终分置 59、判不合格，并写审计日志。</li><li>避免关键词误伤：不自动扣分、不自动定性。</li></ul>
+    </div>
+    <div class="rule hs" data-tip="rule-leadcapture"><h4>⑥ 引导留资<span class="tag g">已优化</span></h4>
+      <p>获取联系方式 / 主动引导但客户拒绝 → <b>不扣分</b>；全程没有留资意识 → 扣 5 分。留资识别支持掩码号码与分段发送。</p><ul><li><b>只认客户自己发来的联系方式</b>：客服发的售后电话/服务电话/商品链接里的数字，不算客户留资。</li></ul>
+      <ul><li>保留系统已有优化，不按人工标准 20 分重算。</li><li>留资也用于电销线索汇总与 A 级判定。</li></ul>
+    </div>
+    <div class="rule hs" data-tip="rule-merge"><h4>⑦ 客户合并去重<span class="tag b">默认开启</span></h4>
+      <p>同一店铺 + 同一客户的多次咨询合并为一条：客服列合并去重（可多个），详情页按「第 N 次咨询」分隔；统计、电销、AI 副驾均按合并口径。</p><ul><li>客户以 Excel「顾客」名为准（电商平台日志的打码账号同一客户也会变），通用昵称（电商平台用户/匿名等）用账号兜底。</li><li>导入时先合并「同一客户 60 分钟内」的碎片会话，再合并同一客户的历史咨询。</li></ul>
+      <ul><li>可关闭：筛选区「按客户合并（一人一条）」。</li><li>人工复核仍按单次会话，避免掩盖单次问题。</li></ul>
+    </div>
+    <div class="rule hs" data-tip="rule-review"><h4>⑨ 人工复核队列口径<span class="tag a">v4.4.2</span></h4>
+      <p>只有真正的疑点才进复核队列：<b>响应时间无法计算、致命候选、阶段/有效性冲突</b>。必问缺失、话术分数等确定性扣分不再进队列（分数里已体现），避免“几乎全表待复核”。</p>
+      <ul><li>总览里浅红色行 = 待复核；处理完成后恢复白底。</li><li>人工改分、确认致命项、采纳 AI 改判都会写审计日志。</li></ul>
+    </div>
+    <div class="rule hs" data-tip="rule-import"><h4>⑧ 会话切分与角色识别<span class="tag g">v4.4.1 修复</span></h4>
+      <p>有「以下为一通会话/会话结束」标记时按标记切分；没有标记时按消息时间间隔 &gt;30 分钟兜底切分，避免整份日志变成 1 条或 0 条。</p>
+      <ul><li>角色以 Excel「客服/转接后客服」列为准（本批次最可靠）；未登记账号默认按客户处理，<b>不再用“名字可读”猜客服</b>（客户昵称也常是中文）。</li><li>同一客户同店铺、间隔 ≤60 分钟的连续会话合并为一次咨询（电商平台日志会按超时/转接切成多通）；客服名不做去前缀处理。</li></ul>
+    </div>
+  </div>
+
+  <!-- 评分体系 -->
+  <div id="roles" style="margin-top:30px">
+    <div class="sec-head"><span class="idx">五</span><h2>双角色看板</h2><p>总览右上角「看板角色」切换：运营 / 客服；筛选区两套共用</p></div>
+    <div class="rule" style="margin-bottom:12px">
+      <h4>运营看板</h4>
+      <p>沿用运营视图：统计卡、筛选、商机/评分分布图、13 列明细表，AI 质检、客服扣分率、爆单一铲、导出等操作。<b>放大列表</b>可隐藏统计与图表，只保留筛选与明细。原「按新标准重算评分」按钮已删除（新规则统一为单一评分库，导入、AI 完成时自动重算，无需手动）。</p>
+    </div>
+    <div class="rule">
+      <h4>客服看板（客服主管视角）</h4>
+      <ul>
+        <li><b>完整筛选保留</b>：搜索、店铺、客服、产品、阶段、商机、有效、分数、扣分、日期、按客户合并、清除筛选，与运营看板共用；</li>
+        <li><b>子页1「客服汇总 &amp; 统计」</b>：客服平均分对比柱状图、6 维平均得分率柱状图、按客服汇总大表（咨询数、平均分、合格率、待AI、待复核、平均扣分、有扣分、6 维得分率），点击任意客服行筛选该客服；</li>
+        <li><b>子页2「咨询明细」</b>：每条咨询 6 个维度用<b>单元格数据条</b>展示得分率（100% 填满），另有总分、评级、复核、建议；</li>
+        <li><b>基础质检功能完整</b>：智能批量质检、全量智能质检、智能总结、客服扣分率、导出 Excel、爆单一铲都在客服看板；</li>
+        <li><b>「列」按钮</b>：Excel 式显示/隐藏任意列；<b>放大列表</b>会自动切到明细子页并最大化；</li>
+        <li><b>「评分规则」</b>：查看每个维度、每一档的详细达标标准。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="score" style="margin-top:30px">
+    <div class="sec-head"><span class="idx">六</span><h2>评分规则（scoring-v2.0.0 · 100 分四档制）</h2><p>6 个维度，按优秀/良好/合格/不合格给分</p></div>
+    <p class="sec-desc">规则维度导入后直接出分；AI 维度在 AI 质检完成前显示「待AI质检」、暂不计分，AI 完成后自动重算。两个角色看板共用同一套分数。</p>
+    <table class="tbl">
+      <thead><tr><th style="width:120px">维度</th><th style="width:70px">满分</th><th style="width:110px">质检方式</th><th>档位与得分</th></tr></thead>
+      <tbody>
+        <tr><td><b>响应速度</b></td><td>10</td><td>规则</td><td>20 秒内 10 分；1 分钟内 8 分；3 分钟内 6 分；超过 3 分钟/无回复 2 分</td></tr>
+        <tr><td><b>售前必问</b></td><td>25</td><td>规则 + AI 辅助</td><td>问 3 个核心问题 25 分；2 个 20 分；1 个 15 分；未问 5 分</td></tr>
+        <tr><td><b>话术匹配度</b></td><td>10</td><td>AI 语义</td><td>匹配度 ≥70% 且推荐正确 10 分；50-70% 8 分；30-50% 6 分；&lt;30% 2 分</td></tr>
+        <tr><td><b>问题解决</b></td><td>30</td><td>AI 语义</td><td>完整解决 30 分；基本解决 25 分；部分解决 15 分；未解决 5 分</td></tr>
+        <tr><td><b>引导留资</b></td><td>20</td><td>规则</td><td>客户留下联系方式 20 分；主动引导 15 分；有留资意识 10 分；无 0 分</td></tr>
+        <tr><td><b>优惠触达</b></td><td>5</td><td>规则 + AI 辅助</td><td>提及优惠/活动/折扣 5 分；未提及 0 分（两档）</td></tr>
+      </tbody>
+    </table>
+    <div class="formula" style="margin-top:10px">总分 = 6 维得分之和（满分 100）　｜　及格线 60 分　｜　评级：优秀≥90 · 良好≥75 · 合格≥60 · 不合格&lt;60</div>
+    <div class="notes" style="margin-top:14px">
+      <div class="note-card"><h4>详细标准</h4><ul><li>应用内点「评分规则」可查看每维每一档的具体条件（秒数、必问组数、联系动作、AI 判定含义）；</li><li>话术匹配度原文写“20%，满分10分”，按满分 10 分计入总分，保证 6 维合计 100；</li><li>售前必问/优惠触达当前以关键词判定，AI 复核辅助在人工复核中确认。</li></ul></div>
+      <div class="note-card"><h4>复核与建议</h4><ul><li>人工复核页支持「一键复核全部」：按当前最终状态批量确认，待AI/售后记录会跳过；</li><li>表格列名「建议」：优先显示 AI 语义生成的改进建议（服务/话术/产品推荐），没有 AI 时退回规则建议；</li><li>AI 维度未完成时总览显示待AI，不会把未质检数据当最终分。</li></ul></div>
+    </div>
+  </div>
+
+<!-- ==================== 六、部署 ==================== -->
+<section class="wrap" id="deploy">
+  <div class="sec-head"><span class="idx">六</span><h2>部署与跨平台</h2><p>不用部署：解压即用</p></div>
+  <div class="deploy">
+    <div class="plat hs" data-tip="deploy-win">
+      <h4>Windows（交付版）</h4>
+      <ol>
+        <li>解压 zip → 双击 <code>全量自动化客服质检系统.exe</code>；</li>
+        <li>已内置 Python 运行环境，同事无需安装任何依赖；</li>
+        <li>配置、数据都在程序旁边的 <code>config/</code>、<code>data/</code>；</li>
+        <li>可执行 <code>exe --selftest</code> 做启动自检。</li>
+      </ol>
+    </div>
+    <div class="plat hs" data-tip="deploy-mac">
+      <h4>macOS（免安装绿色包 · Apple Silicon）</h4>
+      <ol>
+        <li>解压 <code>全量自动化客服质检系统_macOS_免安装.zip</code>；</li>
+        <li>双击「启动系统.command」，或右键「2-双击启动.app」→ 打开；</li>
+        <li>包内已含 Python 3.12 + PyQt6，无需安装、无需联网；</li>
+        <li>首次被拦时右键打开，或 <code>xattr -dr com.apple.quarantine</code>；</li>
+        <li>Intel Mac 用源码包运行 <code>build_macos.command</code> 生成对应 .app。</li>
+      </ol>
+    </div>
+  </div>
+  <div class="notes" style="margin-top:14px">
+    <div class="note-card"><h4>数据与安全</h4><ul><li>数据只存本机 SQLite（<code>data/qc.db</code>）；</li><li>AI 密钥仅存本机 <code>config/ai_config.json</code>，不写入代码、不进安装包；</li><li>所有人工修改、AI 采纳、导入删除都有审计日志。</li></ul></div>
+    <div class="note-card"><h4>迁移与备份</h4><ul><li>备份整个程序文件夹即可（config + data + templates）；</li><li>换电脑：拷贝文件夹 → 双击程序，数据与历史对话保留；</li><li>历史对话：<code>data/copilot_history.json</code>。</li></ul></div>
+  </div>
+</section>
+
+<!-- ==================== 七、FAQ ==================== -->
+<section class="wrap" id="faq">
+  <div class="sec-head"><span class="idx">七</span><h2>常见问题</h2><p>排障与口径疑问</p></div>
+  <div class="faq">
+    <div class="qa hs" data-tip="faq-import"><b>导入后会话没有正确切分？</b><p>确认日志里是否有「以下为一通会话 / 会话结束」标记；没有时系统会按消息间隔 &gt;30 分钟兜底切分。仍异常时提供日志前 30 行（脱敏）再调。</p></div>
+    <div class="qa hs" data-tip="faq-ai-slow"><b>点「测试连接」以前会卡住？</b><p>已改为后台线程：界面显示「正在测试（最长约 60 秒）」，不阻塞操作。</p></div>
+    <div class="qa hs" data-tip="faq-ai-keyerror"><b>全量智能质检失败，提示“表格缺少必要字段”？</b><p>不是 Excel 缺字段，是合并会话里的「第 N 次咨询」分隔消息没有消息序号导致的旧 bug；v4.4.6 已修复（AI 质检会自动跳过分隔消息）。更新版本后直接重跑即可，数据不用重新导入。</p></div>
+    <div class="qa hs" data-tip="faq-ai-suggest"><b>AI 没有给出改判建议？</b><p>旧 AI 结果没有建议字段；重新跑一次「智能批量质检」或「全量智能质检」即可产生。AI 只在证据明确时建议改判。</p></div>
+    <div class="qa hs" data-tip="faq-score-drop"><b>重算后分数变低了？</b><p>新版评分新增「话术匹配、优惠触达」两个维度、必问权重加大，属于预期。可在 <code>scoring.yaml</code> 调低某档扣分后重算。</p></div>
+    <div class="qa hs" data-tip="faq-copilot-entry"><b>爆单一铲打不开/卡住/大范围弹窗？</b><p>v4.4.4 已去掉大范围时的阻塞弹窗（不再抢焦点、不会关掉副驾窗口），改为窗口内进度提示并自动分批；异常仍会写 <code>logs/crash_*.log</code>。</p></div>
+    <div class="qa hs" data-tip="faq-mac"><b>Mac 压缩包不到 1MB，是空包吗？</b><p>那是「源码工具包」，不是 App。需在 Mac 上双击 <code>build_macos.command</code> 生成约 150–300MB 的 .app；之后同事解压双击即用。</p></div>
+    <div class="qa hs" data-tip="faq-history"><b>聊天历史能删吗？</b><p>能。左侧「历史对话」右键 → 删除此对话/清空全部；或选中按 Delete；删除不可恢复。</p></div>
+    <div class="qa hs" data-tip="faq-token"><b>AI 读一万条原文要多少 token？</b><p>约 700 万–2000 万 tokens/次（约 20–60 元），且一次塞不下。日常优先用 SQL 统计与卡片摘要，细节核查再对子集用全文精读。</p></div>
+  </div>
+</section>
+
+<!-- ==================== 八、版本记录 ==================== -->
+<section class="wrap" id="version">
+  <div class="sec-head"><span class="idx">八</span><h2>版本记录</h2><p>关键节点</p></div>
+  <div class="timeline">
+    <div class="tl"><b>v5.2.0</b><span>2026-11-06</span><p>评分规则升级为 100 分四档制（响应/必问/话术/问题/留资/优惠）；客服看板新增统计子页（客服平均分、6维得分率柱状图）与基础质检操作；维度得分改为单元格数据条；新增「列」隐藏列、一键复核、AI 语义建议；删除运营看板手动重算按钮。</p></div>
+    <div class="tl"><b>v5.1.1</b><span>2026-11-06</span><p>修复导入中断后“批次残留但总览空白、再次导入被提示已导入”的问题：批次+会话+质检结果改为同一事务写入；启动时自动清理未完成的空批次；数据导入页新增「修复空白批次」按钮；导入成功后自动清空筛选，确保新数据显示；重新导入同一文件可直接恢复。</p></div>
+    <div class="tl"><b>v5.1.0</b><span>2026-11-05</span><p>运营/客服看板共用筛选区；客服看板恢复完整筛选并新增“按客服汇总大表”（咨询数/平均分/合格率/待AI/待复核/6维度得分率/有扣分），点击行筛选该客服、支持全部客服与清除；运营看板新增放大列表；评分规则弹窗补全每维度三档详细达标标准；导入批次支持编辑店铺标记与备注。</p></div>
+    <div class="tl"><b>v5.0.0</b><span>2026-11-05</span><p>评分规则库重构为单一三层档位（扣 33%/63%/100%，AI 维度待质检占位）；质检总览新增运营/客服双角色看板；客服看板支持 6 维度得分百分比表头、放大/缩回列表；废弃旧版/新版规则库切换。</p></div>
+    <div class="tl"><b>v4.4.7</b><span>2026-11-05</span><p>评分标准支持自由选择：总览「评分标准」弹窗可预览/切换内置标准（现行 V2.0.2、旧标准 V0.2.0），切换后按所选标准重算历史数据；支持在 config/scoring_profiles/ 放自定义 YAML 扩展。</p></div>
+    <div class="tl"><b>v4.4.6</b><span>2026-11-05</span><p>修复「全量智能质检 / 智能批量质检」在合并会话上报“表格缺少必要字段”的问题：合并后的「第 N 次咨询」分隔消息没有消息序号，AI 质检读取时报错；现在会自动跳过系统分隔消息并补序号。</p></div>
+    <div class="tl"><b>v4.4.5</b><span>2026-10-30</span><p>质检总览新增关键词搜索：客户名、账号、客服、商品名称/型号、聊天内容，输入即筛；支持空格分隔多关键词；双击结果行直接看聊天记录。</p></div>
+    <div class="tl"><b>v4.4.4</b><span>2026-10-30</span><p>爆单一铲修复：大范围筛选时去掉阻塞式「选择分析方式」弹窗（会抢焦点、看起来像把副驾窗口顶掉），改为窗口内一行提示并自动按批分析；全文精读也不再弹确认框，直接开始、可随时停止。</p></div>
+    <div class="tl"><b>v4.4.3</b><span>2026-10-30</span><p>总览新增「评分标准」新旧对比弹窗；「按新标准重算评分」给出变化反馈（无变化时说明原因）。</p></div>
+    <div class="tl"><b>v4.4.2</b><span>2026-10-30</span><p>留资只认客户自己发来的联系方式（客服售后电话不再算留资）；总览新增「清除筛选」；客服筛选/表格显示短名并加宽；待复核行浅红底；复核队列收窄到真正疑点（响应无法计算/致命候选/阶段冲突）。</p></div>
+    <div class="tl"><b>v4.4.0</b><span>2026-10-29</span><p>评分体系对齐人工标准 V2.0.2（六维倒扣、评级、重算评分）；AI 建议改判 + 人工一键采纳；扣分项筛选与客服扣分率；号码分段识别；爆单一铲客户名锚定。</p></div>
+    <div class="tl"><b>v4.3.1</b><span>2026-10-29</span><p>同一客户多次咨询合并去重（客服列合并）；无标记日志按时间间隔兜底切分；未知账号角色识别兜底。</p></div>
+    <div class="tl"><b>v4.3.0</b><span>2026-10-29</span><p>总览分数段筛选、柱状图占比与点击筛选、秒级时间、商品名称/客户列、留资线索筛选与导出、异步测试连接、副驾独立窗口。</p></div>
+    <div class="tl"><b>v4.2.x</b><span>2026-10-27</span><p>聊天历史删除、镂空/荧光底色修复、金色 3D 按钮、铲子头像、Windows/macOS 跨平台打包。</p></div>
+    <div class="tl"><b>v4.1.x</b><span>2026-10-26</span><p>爆单一铲：卡片摘要 + 流式回答 + 历史持久化；全量 SQL 统计；全文精读；入口移到总览弹窗。</p></div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div>全量自动化客服质检系统 · 爆单一铲 ｜ 系统总览文档 v5.2.0</div>
+  <div style="margin-top:4px">本文档为离线单文件，可直接分发给同事；点击任意高亮区域查看功能说明。</div>
+</footer>
+</main>
+
+<!-- ==================== 说明抽屉 ==================== -->
+<div class="overlay" id="ov"></div>
+<aside class="drawer" id="dw" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="t"><h3 id="dw-t">说明</h3><div class="sub" id="dw-s"></div></div>
+    <button class="drawer-close" id="dw-c" title="关闭">×</button>
+  </div>
+  <div class="drawer-body" id="dw-b"></div>
+  <div class="drawer-foot"><span>点击其他高亮区域可继续查看</span><button id="dw-ok">知道了</button></div>
+</aside>
+
+<script>
+/* ============ 功能说明数据 ============ */
+const TIPS = {
+  "nav-import": {t:"数据导入", s:"第一步：把 log + Excel 导入系统", body:`
+    <h4>用途</h4><p>把客服系统导出的 .log/.txt 与咨询记录 .xlsx 导入本地数据库，自动解析、匹配、规则初筛、评分并落库。</p>
+    <h4>操作</h4><ol><li>选择店铺（支持多店铺累积）；</li><li>分别选择日志与 Excel 文件；</li><li>点「开始导入」，等待完成提示；</li><li>重复文件会按日志哈希去重，不会重复入库。</li></ol>
+    <div class="kv"><b>产出：</b>会话、质检结果、批次记录；失败会给出诊断（会话数/匹配数）。</div>`},
+  "nav-overview": {t:"质检总览", s:"系统主界面：统计 + 筛选 + 图表 + 明细", body:`
+    <h4>用途</h4><p>所有质检结果的汇总视图，也是批量操作（AI 质检、汇总、重算、导出、进入爆单一铲）的入口。</p>
+    <h4>主要区域</h4><ul><li>顶部统计卡：总咨询/售前/售后/有效/A-B-C/电销线索/平均分，带占比；</li><li>筛选区：店铺/客服/产品/阶段/商机/有效/分数/扣分/日期 + 按客户合并；</li><li>双柱状图：商机等级、售前分数分布；</li><li>操作行：AI 质检、客服扣分率、重算评分、爆单一铲、导出；</li><li>明细表：13 列，双击进详情。</li></ul>`},
+  "nav-review": {t:"人工复核", s:"确认或改判可疑会话", body:`
+    <h4>用途</h4><p>规则初筛标记为可疑（信号冲突/证据不足/致命候选）的会话在这里人工确认。</p>
+    <h4>操作</h4><ol><li>双击行进入会话详情；</li><li>查看聊天原文、扣分明细、AI 判定；</li><li>可直接修改「人工最终分」后保存；</li><li>确认致命项 → 59 分/不合格；</li><li>如 AI 建议改判，可一键采纳。</li></ol>
+    <div class="kv"><b>保存后：</b>总览立即更新，且写审计日志。</div>`},
+  "nav-tele": {t:"电销跟进", s:"留资线索汇总与导出", body:`
+    <h4>用途</h4><p>把所有出现联系方式（电话/微信/QQ/邮箱）或留资意图的会话汇总，供销售跟进。</p>
+    <h4>操作</h4><ul><li>按「线索类型」筛选：全部/有留资/空白/电话/微信/QQ/邮箱/其他；</li><li>顶部显示当前条数与占比；</li><li>点「导出 Excel」导出当前筛选结果；</li><li>双击行查看聊天详情。</li></ul>`},
+  "nav-copilot": {t:"爆单一铲（弹窗）", s:"AI 质检副驾：问答、统计、找问题、写话术", body:`
+    <h4>入口</h4><p>质检总览按钮行 →「爆单一铲」，打开独立窗口（非模态，主界面可继续操作）。</p>
+    <h4>能做什么</h4><ul><li>根据当前筛选/全部数据回答问题；</li><li>数量占比排名 → 全量 SQL 统计；</li><li>内容分析 → 摘要卡片（超 200 条可选全量分批或快速）；</li><li>细节核查 → 全文精读；</li><li>生成可直接发客户的话术。</li></ul>`},
+  "nav-ai": {t:"智能设置", s:"AI 接口配置", body:`
+    <h4>用途</h4><p>配置公司智能入口（地址、模型、密钥、协议）。不配置也能用规则质检、复核与导出，只是不能用 AI 质检与副驾。</p>
+    <h4>注意</h4><ul><li>密钥只存本机 <code>config/ai_config.json</code>；</li><li>「测试连接」已改后台执行，不会卡界面；</li><li>协议支持「对话接口 / 响应接口」。</li></ul>`},
+
+  /* 数据导入 */
+  "import-store": {t:"店铺选择", s:"一个店铺一组数据，可累积", body:`<p>不同店铺的日志/Excel 分别导入；系统按店铺隔离数据但可同屏查看。店铺列表可在「管理店铺」里维护。</p><div class="kv">客服筛选与店铺数据绑定：筛选客服时只出现该店铺数据里识别到的客服。</div>`},
+  "import-log": {t:"客服日志文件", s:".log / .txt", body:`<p>系统按会话标记切分；没有标记时按消息时间间隔 &gt;30 分钟兜底切分。消息里的账号：含 * 或纯数字视为客户，可读名称视为客服。</p>`},
+  "import-excel": {t:"咨询记录 Excel", s:".xlsx", body:`<p>用于补充客户昵称、商品名称、咨询类型、满意度等标签；未匹配到的会话仍会独立保留并参与质检。</p>`},
+  "import-run": {t:"开始导入", s:"解析 → 匹配 → 规则 → 评分", body:`<p>一次完成：会话切分、角色识别、Excel 匹配、阶段/有效性/商机判定、六维评分、写库与批次记录。</p><div class="kv">完成后统计卡刷新；总览显示本次导入的会话数、匹配数。</div>`},
+  "import-manage": {t:"管理店铺", s:"增删店铺名称", body:`<p>维护店铺列表；导入时选择对应店铺，避免不同店铺数据混在一起。</p>`},
+  "import-batch-table": {t:"历史批次", s:"可删除批次", body:`<p>查看每次导入的批次、数据范围、会话/匹配数、备注。<b>双击批次行或点「编辑选中批次」</b>可修改店铺标记与备注；改店铺会同步该批次全部会话，数据与评分不变。删除批次会连带删除该批会话与质检结果。</p>`},
+
+  /* 总览 */
+  "overview-stats": {t:"统计卡", s:"数量 + 占比", body:`<p>显示当前筛选结果的总咨询、售前/售后、有效、A/B/C、电销线索、售前平均分；每个数字下方有占比小字。</p><div class="kv">开启「按客户合并」时，口径是「一个客户一条」，不是会话数。</div>`},
+  "overview-filters": {t:"筛选区", s:"搜索 + 8 个筛选 + 合并开关 + 日期 + 清除筛选", body:`<p>顶部搜索框 + 店铺、客服、产品、阶段、商机、有效、分数段、扣分项，以及开始/结束日期；「清除筛选」一键恢复全部条件。</p><ul><li>扣分项：有扣分/无扣分/致命候选/各维度扣分；</li><li>分数段：90-100/80-89/70-79/60-69/&lt;60/无分数；</li><li>按客户合并：同一客户多次咨询合并展示；</li><li>客服下拉显示去掉店铺前缀的短名（音视频-zhenpeng → zhenpeng）。</li></ul>`},
+  "overview-merge": {t:"按客户合并", s:"一人一条（默认开）", body:`<p>同一店铺 + 同一客户的多次咨询合并为 1 条：客服列显示参与过的所有客服，详情页用「第 N 次咨询」分隔。</p><div class="kv">关掉后恢复按会话统计；人工复核始终按单次会话。</div>`},
+  "overview-chart-lead": {t:"商机等级分布", s:"数量 + 占比 + 点击筛选", body:`<p>柱顶是数量、柱内是占比。点击柱子按该等级筛选，再点一次取消。</p>`},
+  "overview-chart-score": {t:"售前评分分布", s:"五档评分区间", body:`<p>90-100 / 80-89 / 70-79 / 60-69 / &lt;60；点击柱子按分数段筛选，再点一次取消。</p>`},
+  "overview-actions": {t:"操作行", s:"批量 AI / 扣分率 / 重算 / 评分标准 / 副驾 / 导出", body:`<ul><li><b>智能批量质检可疑会话</b>：只跑可疑/待复核会话；</li><li><b>全量智能质检</b>：对当前筛选全部会话逐条跑 AI（已完成复核的跳过）；</li><li><b>智能总结当前筛选</b>：生成一段总结文本；</li><li><b>客服扣分率</b>：按客服统计扣分占比；</li><li><b>按新标准重算评分</b>：应用最新 scoring.yaml 重算历史数据（数据本来就是新标准时不会变化，会提示原因）；</li><li><b>评分标准</b>：查看新旧标准差异、六维档位、评级线、复核口径；</li><li><b>爆单一铲</b>：打开 AI 副驾；</li><li><b>导出 Excel</b>：导出当前筛选明细。</li></ul>`},
+  "overview-search": {t:"关键词搜索", s:"客户名 / 账号 / 客服 / 商品 / 聊天内容", body:`<p>输入即筛：支持客户名、客户账号、客服名、商品名称/型号、聊天内容（客户和客服说的话都会搜）。</p><ul><li>多个关键词用空格分隔，需同时包含（如「质保 售后」）；</li><li>搜索后统计卡、图表、明细表同步更新，双击结果行即可看聊天详情；</li><li>搜索框右侧会显示「找到 N 条会话，显示 M 条」；</li><li>点「清除筛选」会连同搜索词一起清空。</li></ul>`},
+  "overview-clear": {t:"清除筛选", s:"一键恢复全部条件", body:`<p>把搜索框和店铺/客服/产品/阶段/商机/有效/分数/扣分 8 个筛选恢复「全部」，日期恢复为数据全范围，保持「按客户合并」。</p>`},
+  "overview-red": {t:"浅红行 = 待复核", s:"一眼看到需要人工确认的会话", body:`<p>待人工复核的会话整行浅红底（复核完成恢复白底）。复核队列只收真正疑点：响应时间无法计算、致命候选、阶段/有效性冲突；必问缺失、话术低分等确定性扣分不再进队列。</p>`},
+  "scoring-standard": {t:"评分规则", s:"查看四档详细标准", body:`<p>当前规则库为 scoring-v2.0.0：6 维 100 分，按优秀/良好/合格/不合格给分；话术匹配度、问题解决由 AI 语义判断，AI 未完成时显示「待AI」。</p><ul><li>查看每维每档的具体条件：总览/客服看板点「评分规则」；</li><li>修改档位/关键词：<code>config/scoring.yaml</code>；</li><li>导入与 AI 完成时自动重算，无需手动按钮。</li></ul>`},
+  "role-switch": {t:"看板角色", s:"运营 / 客服", body:`<p>总览右上角切换。两套看板共用筛选区；客服看板分「客服汇总 &amp; 统计」和「咨询明细」两个子页，含柱状图、客服汇总大表、6维数据条、AI 质检与爆单一铲。选择会记住。</p>`},
+  "overview-table": {t:"明细表", s:"13 列，双击查看详情", body:`<p>时间/店铺/客服/客户/产品/商品名称/阶段/有效/商机/分数/智能判定/留资线索/跟进建议。</p><ul><li><b>浅红色行 = 待复核</b>（处理完成后恢复白底）；</li><li>客户列不打码（Excel 昵称）；</li><li>分数悬停显示评级；智能判定悬停显示 AI 理由与改判建议；</li><li>双击行打开会话详情。</li></ul>`},
+
+  /* 复核 */
+  "review-queue": {t:"复核队列", s:"可疑会话集合", body:`<p>进入条件：规则判定为可疑（信号冲突、证据不足、致命候选）或阶段为待复核。完成人工复核后会移出队列。</p>`},
+  "review-table": {t:"复核列表", s:"原因 + 状态", body:`<p>列出时间、客服、阶段、有效、商机、分数、判定原因、复核状态；双击进入详情。</p>`},
+  "review-score": {t:"人工改分", s:"0-100 可改", body:`<p>在详情页修改「人工最终分」并保存；保存后总览分数立即更新，写审计日志。可同时填写复核说明（改判理由）。</p>`},
+  "review-fatal": {t:"确认致命项", s:"59 分 / 不合格", body:`<p>命中致命候选（辱骂、私下交易、泄露信息、虚假承诺、恶意推诿）时必须人工确认；确认后最终分置 59 并判不合格。</p>`},
+  "review-ai-adopt": {t:"AI 建议改判", s:"建议 + 一键采纳", body:`<p>AI 质检会给出阶段/有效性改判建议（证据明确才建议）。详情页紫色提示块 +「采纳 AI 建议改判」按钮：采纳后修改判定、标记复核完成并写审计，可再次人工修正。</p>`},
+
+  /* 电销 */
+  "tele-filter": {t:"线索类型筛选", s:"含「空白」", body:`<p>全部 / 有留资 / 空白 / 电话 / 微信 / QQ / 邮箱 / 其他；「空白」用于筛出还没有留资的会话。</p><div class="kv">号码分段发送（138+1234+5678）也能识别。</div>`},
+  "tele-table": {t:"线索列表", s:"类型 + 联系方式", body:`<p>显示时间、店铺、客服、客户、产品、线索类型、留资线索、跟进建议；双击查看聊天详情。</p>`},
+  "tele-export": {t:"导出线索", s:"Excel", body:`<p>导出当前筛选下的留资线索（含类型、联系方式、跟进建议），可直接给销售团队。</p>`},
+
+  /* 爆单一铲 */
+  "copilot-entry": {t:"爆单一铲入口", s:"金色按钮", body:`<p>质检总览按钮行的金色「爆单一铲」，打开独立 AI 副驾窗口，默认分析当前筛选数据。</p>`},
+  "copilot-scope": {t:"数据范围", s:"当前筛选 / 全部数据", body:`<p>决定 AI 看哪些会话：当前筛选=所见即所问；全部数据=忽略筛选。</p><div class="kv">问题类型只决定“怎么算”，不决定“算哪些”。</div>`},
+  "copilot-readmode": {t:"阅读方式", s:"卡片摘要 / 全文精读", body:`<ul><li><b>卡片摘要</b>：每条会话关键句，快、便宜；</li><li><b>全文精读</b>：完整对话，能核对联系方式、承诺细节；按约 2.2 万字/批，显示进度、可停止。</li><li><b>范围超过 200 条</b>：不再弹窗询问，自动按每批 120 条分批分析；窗口内只显示一行进度提示，随时可停止。</li></ul>`},
+  "copilot-side": {t:"历史对话", s:"可回看、可删除", body:`<p>对话自动保存到 <code>data/copilot_history.json</code>；点击回看，右键删除此对话/清空全部，选中按 Delete 也可删除。</p>`},
+  "copilot-thinking": {t:"思考过程", s:"自动折叠", body:`<p>小灰字显示 AI 的读取/注入/批次进度；生成时展开，完成后自动折叠，点击标题可展开。</p>`},
+  "copilot-sql": {t:"统计类问题", s:"只读 SQL 全量算", body:`<p>数量/占比/排名/趋势问题：模型只写一条只读 SQL（系统拼好筛选视图，模型改不了筛选条件），执行结果再交给模型组织结论。</p><div class="kv">安全：只允许 SELECT、表白名单、强制 LIMIT、禁止写操作。</div>`},
+  "copilot-capsules": {t:"提示词胶囊", s:"点一下填入输入框", body:`<p>质保、会议室场景、竞品对比、商机信号、话术改写等；点胶囊只填入不发送，可编辑；按筛选自动推荐；「管理」可增删改，存 <code>templates/capsules.json</code>。</p>`},
+  "copilot-input": {t:"输入与发送", s:"Enter 发送 / Shift+Enter 换行", body:`<p>生成中可点「停止」；回答按「结论 / 依据 / 建议」分层，关键内容加粗，引用客户名称而非会话编号。</p>`},
+  "copilot-history-delete": {t:"删除对话", s:"不可恢复", body:`<p>删除会立即写回历史文件；AI 生成中会提示先停止。</p>`},
+
+  /* 智能设置 */
+  "ai-config": {t:"接口配置", s:"地址 / 模型 / 密钥", body:`<p>填公司智能入口地址、模型名、密钥并保存；保存在本机 config/ai_config.json，不进安装包。</p>`},
+  "ai-type": {t:"协议类型", s:"对话 / 响应", body:`<p>兼容常见协议：<code>chat_completions</code>（对话接口）与 <code>responses</code>（响应接口）；不确定时先用对话接口。</p>`},
+  "ai-key": {t:"接口密钥", s:"只存本机", body:`<p>密钥保存到本机配置文件；界面上以密码形式显示。交付包内置空密钥模板，同事自己填。</p>`},
+  "ai-test": {t:"测试连接", s:"后台执行不卡界面", body:`<p>点测试后显示「正在测试（最长约 60 秒）」，结果会显示成功/失败原因；界面仍可操作。</p>`},
+
+  /* 使用说明步骤 */
+  "usage-import": {t:"使用 · 导入", s:"准备两个文件", body:`<p>客服系统导出日志 + 咨询记录 Excel；选择店铺后导入。多店铺可分别导入累积。</p>`},
+  "usage-qc": {t:"使用 · 自动质检", s:"规则 + 评分", body:`<p>导入即完成规则初筛与评分；需要 AI 补充时再点「智能批量质检」或「全量智能质检」。</p>`},
+  "usage-review": {t:"使用 · 人工复核", s:"可疑会话", body:`<p>看原因 → 看原文 → 改分/确认致命项/采纳 AI 改判 → 保存。所有操作留痕。</p>`},
+  "usage-tele": {t:"使用 · 电销跟进", s:"留资线索", body:`<p>筛选线索类型/空白 → 导出 Excel 给销售；号码分段也能识别。</p>`},
+  "usage-copilot": {t:"使用 · AI 副驾", s:"问答与话术", body:`<p>先用卡片摘要问整体问题；要核对细节切全文精读；统计类问题自动走 SQL。</p>`},
+  "usage-export": {t:"使用 · 导出复盘", s:"Excel + 扣分率", body:`<p>总览导出明细、电销导出线索；用「客服扣分率」找差距；规则调整后点「重算评分」。</p>`},
+
+  /* 架构 */
+  "arch-import": {t:"数据导入", s:"入口", body:`<p>接收 log + Excel，计算日志哈希去重，建立批次，输出会话与匹配关系。</p>`},
+  "arch-parse": {t:"解析 / 归一", s:"会话切分", body:`<p>按会话标记切分；无标记时按时间间隔兜底。清洗 HTML/图片/模板消息，识别角色与产品型号。</p>`},
+  "arch-match": {t:"标签匹配", s:"会话 ↔ Excel", body:`<p>按客户 + 时间窗 + 咨询类型匹配 Excel 行，补充客户昵称、商品名称、满意度等，未匹配会话独立保留。</p>`},
+  "arch-rules": {t:"规则引擎", s:"阶段/有效性/商机/必问", body:`<p>确定性判断，关键词与阈值全部来自 <code>config/rules.yaml</code>；输出判定、原因码、证据引用。</p>`},
+  "arch-score": {t:"评分引擎", s:"六维倒扣", body:`<p>按 <code>config/scoring.yaml</code> 计算各维度扣分、总分、评级与致命候选；问题解决等语义项保留人工复核。</p>`},
+  "arch-db": {t:"SQLite 存储", s:"单文件数据库", body:`<p>会话、质检结果、批次、AI 缓存、审计日志都在 <code>data/qc.db</code>；启动时自动做轻量迁移（补列）。</p>`},
+  "arch-ui": {t:"PyQt6 界面", s:"桌面客户端", body:`<p>总览/复核/电销/智能设置 + 爆单一铲副驾；浅色主题为主，所有详情弹窗保持浅色可读。</p>`},
+  "arch-config": {t:"配置驱动", s:"改配置不改代码", body:`<p>规则、评分、产品库、角色、胶囊外置为 YAML/JSON；改完规则/评分后点「重算评分」应用历史数据。</p>`},
+  "arch-audit": {t:"审计日志", s:"可追溯", body:`<p>记录导入、删除批次、人工复核、AI 建议采纳等操作（谁、何时、前后值）。</p>`},
+  "arch-cross": {t:"跨平台", s:"Windows / macOS", body:`<p>Windows 绿色包内置运行环境；macOS 用脚本生成独立 .app。数据目录跟随程序文件夹，复制即迁移。</p>`},
+  "arch-ai-l0": {t:"AI · L0 SQL", s:"全量精确统计", body:`<p>模型只写只读 SQL，本地全量执行；数字准确、成本极低。筛选条件由系统拼好，模型无法改口径。</p>`},
+  "arch-ai-l1": {t:"AI · L1 卡片", s:"默认内容分析", body:`<p>每条会话压成卡片；默认 A 级优先注入，超 200 条可选全量分批或快速；适合整体共性与话术质量。</p>`},
+  "arch-ai-l2": {t:"AI · L2 全文", s:"细节核查", body:`<p>读完整对话，按约 2.2 万字/批，逐批提炼再合并；适合联系方式、承诺细节等核对，慢且贵，建议按需使用。</p>`},
+
+  /* 规则 */
+  "rule-stage": {t:"规则 · 阶段判定", s:"售前/售后/待复核", body:`<p>售后关键词命中且无售前信号 → 售后；售前信号 → 售前；冲突 → 按售前处理并标记复核。</p><div class="kv">配置位置：<code>config/rules.yaml → after_sale_keywords / signals</code></div>`},
+  "rule-valid": {t:"规则 · 有效性", s:"有效/无效/待复核", body:`<p>短会话且无实质客户问题 → 无效；出现联系方式、购买意向、比价等信号时不判无效。</p><div class="kv">配置位置：<code>rules.yaml → invalid_short_conversation / explicit_signal_overrides_short_rule</code></div>`},
+  "rule-lead": {t:"规则 · A/B/C 商机", s:"等级与依据", body:`<p>A：明确购买/砍价/近期购买/留联系方式；B：竞品对比/购买计划/复购；C：跨天咨询、消息数等弱信号。</p><div class="kv">配置位置：<code>rules.yaml → signals.A/B/C</code></div>`},
+  "rule-questions": {t:"规则 · 必问三组", s:"会议室/视频/场景", body:`<p>覆盖组数决定扣分：3 组 0、2 组 6、1 组 12、0 组 24；客户主动提供也算覆盖。</p><div class="kv">配置位置：<code>rules.yaml → required_questions</code></div>`},
+  "rule-fatal": {t:"规则 · 致命项", s:"人工确认后 59 分", body:`<p>命中关键词只标记候选，必须人工确认；确认后置 59 分、不合格，写审计。</p><div class="kv">配置位置：<code>scoring.yaml → fatal_item.terms</code></div>`},
+  "rule-leadcapture": {t:"规则 · 引导留资", s:"已优化，最高扣 5", body:`<p>获取/主动引导但被拒 0 分；无留资意识扣 5 分。识别支持掩码与分段号码。</p><div class="kv">配置位置：<code>scoring.yaml → lead_capture</code></div>`},
+  "rule-merge": {t:"规则 · 客户合并", s:"一人一条", body:`<p>同店铺同客户多次咨询合并：客服列合并、详情按第 N 次咨询分隔、统计/电销/AI 按合并口径；人工复核仍按单次会话。</p>`},
+  "rule-import": {t:"规则 · 切分与角色", s:"兼容无标记日志", body:`<p>有标记按标记；无标记按时间间隔 &gt;30 分钟切分。未登记账号：含 * 或纯数字视为客户，可读名称视为客服。</p>`},
+  "rule-ai": {t:"规则 · AI 副驾", s:"统计/内容/细节 三条路", body:`<p>统计→SQL；内容→卡片（可全量分批）；细节→全文精读。回答必须引用客户名称，数字必须来自 SQL/原文。</p>`},
+  "rule-ai-adopt": {t:"规则 · AI 改判", s:"人工确认", body:`<p>AI 只在证据明确时建议阶段/有效性改判；人工一键采纳后改判并写审计，可再次修正；AI 不静默改判定。</p>`},
+
+  /* 部署 */
+  "deploy-win": {t:"Windows 交付", s:"解压双击", body:`<p>zip 解压 → 双击 exe 即用；内置 Python；配置与数据在程序旁；可用 <code>--selftest</code> 自检。</p>`},
+  "deploy-mac": {t:"macOS 交付", s:"Mac 上构建一次", body:`<p>源码包在 Mac 上双击 <code>build_macos.command</code> 生成独立 .app；之后同事解压双击即用，无需 Python。</p><div class="kv">首次打开若提示“无法验证开发者”：右键 → 打开。</div>`},
+
+  /* FAQ */
+  "faq-import": {t:"FAQ · 会话未切分", s:"兜底与日志样本", body:`<p>先确认日志是否有会话标记；没有标记时系统按 30 分钟间隔切分。仍异常时提供前 30 行脱敏日志。</p>`},
+  "faq-ai-slow": {t:"FAQ · 测试连接卡住", s:"已异步化", body:`<p>测试连接改为后台线程，界面不阻塞，最长约 60 秒返回结果。</p>`},
+  "faq-ai-keyerror": {t:"FAQ · 智能质检报缺少字段", s:"合并会话分隔消息 bug", body:`<p>v4.4.6 修复：合并会话的「第 N 次咨询」分隔消息没有消息序号，AI 质检读取时报 KeyError（被翻译成“表格缺少必要字段”）。现在会自动跳过系统分隔消息并补序号，更新后直接重跑即可。</p>`},
+  "faq-ai-suggest": {t:"FAQ · 无 AI 改判建议", s:"重新跑 AI 质检", body:`<p>旧结果没有建议字段，重新跑一次 AI 质检即可；证据不足时 AI 会输出 keep（不改）。</p>`},
+  "faq-score-drop": {t:"FAQ · 重算后分数变低", s:"预期行为", body:`<p>新增话术匹配/优惠触达两个维度、必问权重加大，分数下降属预期；可在 scoring.yaml 调档位后重算。</p>`},
+  "faq-copilot-entry": {t:"FAQ · 副驾打不开", s:"错误日志", body:`<p>v4.4.0 已修复早期错误；若仍异常，查看 <code>logs/crash_*.log</code>。</p>`},
+  "faq-mac": {t:"FAQ · Mac 包很小", s:"源码工具包", body:`<p>不到 1MB 是源码构建包，不是 App；在 Mac 上构建后生成约 150–300MB 的 .app。</p>`},
+  "faq-history": {t:"FAQ · 删除聊天历史", s:"三种方式", body:`<p>右键删除 / 选中按 Delete / 清空全部；删除不可恢复。</p>`},
+  "faq-token": {t:"FAQ · Token 成本", s:"为什么会免费感", body:`<p>读 1 万条原文约 700–2000 万 tokens；免费产品实际是“检索后只喂少量片段”。所以我们优先 SQL/卡片，细节再全文精读。</p>`}
+};
+
+/* ============ 交互：抽屉 ============ */
+const ov = document.getElementById('ov'), dw = document.getElementById('dw');
+const dwT = document.getElementById('dw-t'), dwS = document.getElementById('dw-s'), dwB = document.getElementById('dw-b');
+function openTip(key){
+  const data = TIPS[key];
+  dwT.textContent = data ? data.t : '说明';
+  dwS.textContent = data ? data.s : '';
+  dwB.innerHTML = data ? data.body : '<p>暂无说明。</p>';
+  ov.classList.add('on'); dw.classList.add('on'); dw.setAttribute('aria-hidden','false');
+  dwB.scrollTop = 0;
+}
+function closeTip(){ ov.classList.remove('on'); dw.classList.remove('on'); dw.setAttribute('aria-hidden','true'); }
+ov.addEventListener('click', closeTip);
+document.getElementById('dw-c').addEventListener('click', closeTip);
+document.getElementById('dw-ok').addEventListener('click', closeTip);
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeTip(); });
+document.addEventListener('click', e=>{
+  const el = e.target.closest('[data-tip]');
+  if(!el) return;
+  // 导航项先切页再开说明
+  const page = el.dataset.page;
+  if(page) switchPage(page);
+  e.preventDefault(); e.stopPropagation();
+  openTip(el.dataset.tip);
+}, true);
+
+/* ============ 交互：模拟界面切页 ============ */
+function switchPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on', p.dataset.page===name));
+  document.querySelectorAll('.nav-item[data-page]').forEach(n=>n.classList.toggle('on', n.dataset.page===name));
+}
+document.querySelectorAll('.nav-item[data-page]').forEach(n=>{
+  n.addEventListener('click', ()=>switchPage(n.dataset.page));
+});
+
+/* ============ 功能索引 ============ */
+const INDEX = [
+  ["数据导入","log + Excel 导入、批次去重","import-run"],
+  ["会话切分","标记切分 + 时间间隔兜底","import-log"],
+  ["角色识别","客户/客服账号识别","rule-import"],
+  ["批次历史","查看/删除导入批次","import-batch-table"],
+  ["统计卡","数量 + 占比","overview-stats"],
+  ["筛选区","8 个筛选 + 日期","overview-filters"],
+  ["分数段筛选","90-100 / 80-89 / …","overview-filters"],
+  ["扣分项筛选","按扣分维度筛","overview-filters"],
+  ["按客户合并","一人一条，客服合并","overview-merge"],
+  ["商机图表","点击柱子筛选","overview-chart-lead"],
+  ["评分分布图","数量+占比","overview-chart-score"],
+  ["关键词搜索","客户名/聊天内容","overview-search"],
+  ["清除筛选","一键恢复全部条件","overview-clear"],
+  ["待复核浅红行","浅红=待人工确认","overview-red"],
+  ["评分规则","三层档位说明","scoring-standard"],
+  ["看板角色","运营/客服切换","role-switch"],
+  ["客服看板","客服汇总表+6维度明细","role-switch"],
+  ["放大列表","运营/客服看板均可放大","role-switch"],
+  ["客服统计图","客服平均分/6维得分率","role-switch"],
+  ["一键复核","批量确认当前判断","review-queue"],
+  ["隐藏列","Excel式列显示/隐藏","role-switch"],
+  ["编辑批次","修改店铺标记/备注","import-batch-table"],
+  ["大范围自动分批","超200条不再弹窗","copilot-readmode"],
+  ["客服扣分率","按客服统计扣分占比","overview-actions"],
+  ["重算评分","应用最新 scoring.yaml","overview-actions"],
+  ["智能质检","批量 / 全量 AI 质检","overview-actions"],
+  ["智能总结","当前筛选总结","overview-actions"],
+  ["导出 Excel","总览明细导出","overview-actions"],
+  ["会话详情","聊天/扣分/AI/复核","overview-table"],
+  ["精确到秒","聊天时间显示","overview-table"],
+  ["复制客户名","一键复制","overview-table"],
+  ["人工复核","可疑会话确认","nav-review"],
+  ["人工改分","0-100 可改","review-score"],
+  ["致命项","59 分 / 不合格","review-fatal"],
+  ["AI 建议改判","建议 + 一键采纳","review-ai-adopt"],
+  ["电销线索","留资汇总","nav-tele"],
+  ["线索类型筛选","含空白","tele-filter"],
+  ["留资导出","Excel 导出","tele-export"],
+  ["分段号码识别","138+1234+5678","tele-filter"],
+  ["爆单一铲","AI 质检副驾","nav-copilot"],
+  ["数据范围","当前筛选/全部","copilot-scope"],
+  ["阅读方式","卡片/全文","copilot-readmode"],
+  ["提示词胶囊","可管理","copilot-capsules"],
+  ["流式回答","可停止","copilot-input"],
+  ["思考过程","自动折叠","copilot-thinking"],
+  ["只读 SQL","全量精确统计","copilot-sql"],
+  ["全文精读","分批读原文","copilot-readmode"],
+  ["历史对话","回看/删除","copilot-side"],
+  ["AI 接口配置","地址/模型/密钥","ai-config"],
+  ["测试连接","异步不卡","ai-test"],
+  ["服务端规则","阶段/有效性/商机","rule-stage"],
+  ["A/B/C 商机","分级逻辑","rule-lead"],
+  ["必问三组","覆盖率扣分","rule-questions"],
+  ["六维评分","scoring-v0.3.0","nav-overview"],
+  ["评级","优秀/良好/合格/不合格","nav-overview"],
+  ["Windows 交付","双击 exe","deploy-win"],
+  ["macOS 交付","一键构建 .app","deploy-mac"],
+  ["AI 成本","token 量级","faq-token"]
+];
+const fgrid = document.getElementById('fgrid');
+const fs = document.getElementById('fs');
+const fc = document.getElementById('fc');
+function renderIndex(kw){
+  const q = (kw||'').trim().toLowerCase();
+  const list = INDEX.filter(it=>!q || (it[0]+it[1]).toLowerCase().includes(q));
+  fgrid.innerHTML = list.map(it=>`<div class="fcard" data-tip="${it[2]}"><b>${it[0]}</b><small>${it[1]}</small></div>`).join('') || '<div class="mini">没有匹配的功能。</div>';
+  fc.textContent = `共 ${list.length} 项`;
+}
+fs.addEventListener('input', ()=>renderIndex(fs.value));
+renderIndex('');
+</script>
+</body>
+</html>

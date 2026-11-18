@@ -72,6 +72,9 @@ CREATE TABLE IF NOT EXISTS quality_results (
     ai_reason TEXT,
     ai_suggestion TEXT,
     ai_evidence_json TEXT NOT NULL DEFAULT '[]',
+    ai_suggest_stage TEXT,
+    ai_suggest_validity TEXT,
+    ai_suggest_reason TEXT,
     review_status TEXT NOT NULL DEFAULT 'not_required',
     review_note TEXT,
     reviewed_by TEXT,
@@ -139,6 +142,9 @@ class Database:
         cols = {r[1] for r in conn.execute("PRAGMA table_info(quality_results)").fetchall()}
         if "ai_evidence_json" not in cols:
             conn.execute("ALTER TABLE quality_results ADD COLUMN ai_evidence_json TEXT NOT NULL DEFAULT '[]'")
+        for column in ("ai_suggest_stage", "ai_suggest_validity", "ai_suggest_reason"):
+            if column not in cols:
+                conn.execute(f"ALTER TABLE quality_results ADD COLUMN {column} TEXT")
 
     @staticmethod
     def js(value: Any) -> str:
@@ -157,23 +163,81 @@ class Database:
     def find_batch_by_sha(self, sha: str) -> sqlite3.Row | None:
         return self.fetch_one("SELECT * FROM batches WHERE log_sha256 = ?", (sha,))
 
+    def _insert_batch_conn(self, conn: sqlite3.Connection, rec: dict[str, Any]) -> None:
+        conn.execute(
+            """INSERT OR IGNORE INTO batches
+            (id, log_file, excel_file, log_sha256, excel_sha256, store_id, note,
+             imported_at, data_start_at, data_end_at, session_count, matched_count, status, created_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (
+                rec["id"], rec["log_file"], rec.get("excel_file"), rec["log_sha256"], rec.get("excel_sha256"),
+                rec.get("store_id"), rec.get("note"), rec.get("imported_at", _now()),
+                rec.get("data_start_at"), rec.get("data_end_at"), rec.get("session_count", 0),
+                rec.get("matched_count", 0), rec.get("status", "completed"), _now(),
+            ),
+        )
+
     def insert_batch(self, rec: dict[str, Any]) -> None:
         with self.session() as conn:
-            conn.execute(
-                """INSERT OR IGNORE INTO batches
-                (id, log_file, excel_file, log_sha256, excel_sha256, store_id, note,
-                 imported_at, data_start_at, data_end_at, session_count, matched_count, status, created_at)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-                (
-                    rec["id"], rec["log_file"], rec.get("excel_file"), rec["log_sha256"], rec.get("excel_sha256"),
-                    rec.get("store_id"), rec.get("note"), rec.get("imported_at", _now()),
-                    rec.get("data_start_at"), rec.get("data_end_at"), rec.get("session_count", 0),
-                    rec.get("matched_count", 0), rec.get("status", "completed"), _now(),
-                ),
-            )
+            self._insert_batch_conn(conn, rec)
+
+    def count_conversations(self, batch_id: str) -> int:
+        row = self.fetch_one("SELECT COUNT(*) AS c FROM conversations WHERE batch_id = ?", (batch_id,))
+        return int(row["c"]) if row else 0
+
+    def import_batch(self, batch: dict[str, Any], conversations: list[dict[str, Any]],
+                     results: list[dict[str, Any]]) -> None:
+        """批次 + 会话 + 质检结果一次性事务写入：任何一步失败都不会留下空批次。"""
+        with self.session() as conn:
+            self._insert_batch_conn(conn, batch)
+            for rec in conversations:
+                self._upsert_conversation_conn(conn, rec)
+            for rec in results:
+                self._upsert_quality_result_conn(conn, rec)
+
+    def repair_batches(self) -> dict[str, int]:
+        """清理未完成导入留下的空批次；重复 SHA 只提示不自动删数据。返回统计。"""
+        removed = 0
+        duplicates = 0
+        seen_sha: set[str] = set()
+        for batch in self.list_batches():
+            try:
+                count = self.count_conversations(batch["id"])
+            except Exception:
+                count = 0
+            if count == 0:
+                self.delete_batch(batch["id"])
+                removed += 1
+                continue
+            sha = str(batch["log_sha256"] or "")
+            if sha and sha in seen_sha:
+                duplicates += 1
+            elif sha:
+                seen_sha.add(sha)
+        return {"removed_empty": removed, "duplicate_sha": duplicates}
 
     def list_batches(self) -> list[sqlite3.Row]:
         return self.fetch_all("SELECT * FROM batches ORDER BY imported_at DESC")
+
+    def update_batch(self, batch_id: str, store_id: str | None = None, note: str | None = None) -> int:
+        """编辑导入批次的店铺标记/备注；店铺变更同步到该批次会话，返回会话数。"""
+        with self.session() as conn:
+            exists = conn.execute("SELECT 1 FROM batches WHERE id = ?", (batch_id,)).fetchone()
+            if not exists:
+                return 0
+            fields, args = [], []
+            if store_id is not None:
+                fields.append("store_id = ?"); args.append(store_id)
+            if note is not None:
+                fields.append("note = ?"); args.append(note)
+            if fields:
+                args.append(batch_id)
+                conn.execute(f"UPDATE batches SET {', '.join(fields)} WHERE id = ?", args)
+            count = 0
+            if store_id is not None:
+                count = conn.execute(
+                    "UPDATE conversations SET store_id = ? WHERE batch_id = ?", (store_id, batch_id)).rowcount
+            return count
 
     def delete_batch(self, batch_id: str) -> int:
         """删除某次导入的批次及其关联会话、质检结果、AI 缓存。返回删除的会话数。"""
@@ -273,6 +337,7 @@ class Database:
                q.follow_up_advice, q.reason_codes_json, q.dimensions_json, q.deductions_json,
                q.fatal_candidates_json, q.calculated_score, q.final_status, q.final_score,
                q.ai_status, q.ai_judgment, q.ai_reason, q.ai_suggestion, q.ai_evidence_json,
+               q.ai_suggest_stage, q.ai_suggest_validity, q.ai_suggest_reason,
                q.review_status, q.review_note, q.fatal_confirmed
                FROM conversations c LEFT JOIN quality_results q ON q.conversation_id = c.id
                ORDER BY c.first_message_at"""
@@ -299,11 +364,62 @@ class Database:
                 ("quality_result", conversation_id, "human_review", self.js(before), self.js(after), reviewer, _now()),
             )
 
+    def bulk_confirm_reviews(self, rows: list[dict[str, Any]], reviewer: str = "质检员") -> dict[str, int]:
+        """一键复核：确认当前最终状态/分数。跳过待AI质检、售后记录等无法确认的行。"""
+        confirmed = 0
+        skipped = 0
+        with self.session() as conn:
+            for row in rows:
+                status = str(row.get("final_status") or "")
+                if status not in ("合格", "不合格"):
+                    skipped += 1
+                    continue
+                score = row.get("final_score")
+                if score is None:
+                    score = row.get("calculated_score")
+                conn.execute(
+                    """UPDATE quality_results SET review_status='completed', final_status=?, final_score=?,
+                    review_note=CASE WHEN review_note IS NULL OR review_note='' THEN ? ELSE review_note END,
+                    reviewed_by=?, reviewed_at=?
+                    WHERE conversation_id=? AND review_status != 'completed'""",
+                    (status, score, "一键复核：确认当前判断", reviewer, _now(), row["id"]),
+                )
+                confirmed += 1
+            conn.execute(
+                "INSERT INTO audit_log (entity_type, entity_id, action, before_json, after_json, actor, created_at) VALUES (?,?,?,?,?,?,?)",
+                ("quality_result", "bulk", "bulk_confirm_reviews", "{}",
+                 self.js({"confirmed": confirmed, "skipped": skipped}), reviewer, _now()),
+            )
+        return {"confirmed": confirmed, "skipped": skipped}
+
     def insert_audit(self, entity_type: str, entity_id: str, action: str, before: Any, after: Any, actor: str = "system") -> None:
         with self.session() as conn:
             conn.execute(
                 "INSERT INTO audit_log (entity_type, entity_id, action, before_json, after_json, actor, created_at) VALUES (?,?,?,?,?,?,?)",
                 (entity_type, entity_id, action, self.js(before), self.js(after), actor, _now()),
+            )
+
+    def update_scoring_result(self, conversation_id: str, rec: dict[str, Any]) -> None:
+        """按最新规则/评分重算后更新结果；保留 AI 判定与人工复核记录。"""
+        with self.session() as conn:
+            conn.execute(
+                """UPDATE quality_results SET rule_version=?, scoring_version=?, service_stage=?, validity=?,
+                lead_level=?, tele_sales_lead=?, follow_up_advice=?, reason_codes_json=?, evidence_refs_json=?,
+                dimensions_json=?, deductions_json=?, fatal_candidates_json=?, calculated_score=?,
+                final_status=CASE WHEN review_status='completed' THEN final_status ELSE ? END,
+                final_score=CASE WHEN review_status='completed' THEN final_score ELSE ? END,
+                review_status=CASE WHEN review_status='completed' THEN review_status ELSE ? END,
+                computed_at=?
+                WHERE conversation_id=?""",
+                (
+                    rec.get("rule_version"), rec.get("scoring_version"), rec.get("service_stage"),
+                    rec.get("validity"), rec.get("lead_level"), int(bool(rec.get("tele_sales_lead"))),
+                    rec.get("follow_up_advice", ""), self.js(rec.get("reason_codes", [])),
+                    self.js(rec.get("evidence_refs", [])), self.js(rec.get("dimensions", {})),
+                    self.js(rec.get("deductions", {})), self.js(rec.get("fatal_candidates", [])),
+                    rec.get("calculated_score"), rec.get("final_status"), rec.get("final_score"),
+                    rec.get("review_status", "not_required"), _now(), conversation_id,
+                ),
             )
 
     # ---- AI 缓存 ----
@@ -319,9 +435,42 @@ class Database:
                 (cache_key, conversation_id, response_json, status, _now()),
             )
 
-    def update_ai_judgment(self, conversation_id: str, status: str, judgment: str | None, reason: str | None, suggestion: str | None, evidence: Any = None) -> None:
+    def update_ai_judgment(self, conversation_id: str, status: str, judgment: str | None, reason: str | None,
+                           suggestion: str | None, evidence: Any = None, suggest_stage: str | None = None,
+                           suggest_validity: str | None = None, suggest_reason: str | None = None) -> None:
         with self.session() as conn:
             conn.execute(
-                "UPDATE quality_results SET ai_status=?, ai_judgment=?, ai_reason=?, ai_suggestion=?, ai_evidence_json=? WHERE conversation_id=?",
-                (status, judgment, reason, suggestion, self.js(evidence if evidence is not None else []), conversation_id),
+                "UPDATE quality_results SET ai_status=?, ai_judgment=?, ai_reason=?, ai_suggestion=?, "
+                "ai_evidence_json=?, ai_suggest_stage=?, ai_suggest_validity=?, ai_suggest_reason=? "
+                "WHERE conversation_id=?",
+                (status, judgment, reason, suggestion, self.js(evidence if evidence is not None else []),
+                 suggest_stage, suggest_validity, suggest_reason, conversation_id),
+            )
+
+    def apply_ai_suggestion(self, conversation_id: str, service_stage: str | None,
+                            validity: str | None, note: str, actor: str = "质检员") -> None:
+        """人工采纳 AI 建议：改判阶段/有效性，并写审计日志。"""
+        with self.session() as conn:
+            before_row = conn.execute(
+                "SELECT service_stage, validity, review_status FROM quality_results WHERE conversation_id=?",
+                (conversation_id,),
+            ).fetchone()
+            if before_row is None:
+                return
+            before = dict(before_row)
+            conn.execute(
+                """UPDATE quality_results SET service_stage=?, validity=?,
+                review_status='completed', review_note=?, reviewed_by=?, reviewed_at=?
+                WHERE conversation_id=?""",
+                (service_stage or before["service_stage"], validity or before["validity"],
+                 note, actor, _now(), conversation_id),
+            )
+            after = {"service_stage": service_stage or before["service_stage"],
+                     "validity": validity or before["validity"],
+                     "review_note": note, "review_status": "completed"}
+            conn.execute(
+                "INSERT INTO audit_log (entity_type, entity_id, action, before_json, after_json, actor, created_at) "
+                "VALUES (?,?,?,?,?,?,?)",
+                ("quality_result", conversation_id, "ai_suggestion_adopted",
+                 self.js(before), self.js(after), actor, _now()),
             )

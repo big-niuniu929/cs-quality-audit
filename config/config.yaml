@@ -1,14 +1,14 @@
 app:
-  name: 品牌A 客服质检系统
-  version: 4.0.0
+  name: 全量自动化客服质检系统
+  version: 5.2.0
   timezone: Asia/Shanghai
   database_path: data/qc.db
   data_dir: data
   log_dir: logs
 stores:
-- 品牌A官方自营旗舰店
-- 品牌B
+- '1'
 import:
+  session_merge_gap_minutes: 60
   log_extensions:
   - .log
   - .txt
@@ -23,7 +23,7 @@ ai:
   base_url: https://gateway.example.com/v1
   api_type: chat_completions
   model: your-model-name
-  api_key_env: 品牌A_QC_API_KEY
+  api_key_env: QC_API_KEY
   timeout_seconds: 60
   max_retries: 2
   concurrency: 3

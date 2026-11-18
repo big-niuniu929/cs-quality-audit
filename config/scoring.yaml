@@ -1,16 +1,34 @@
-# 品牌A 客服质检系统 4.0 — 评分配置（100 分向下扣分）
-# 留资按扣分制（用户已确认）：最高扣 5 分，没尝试留资扣 5 分，获得联系方式/主动被拒 0 分。
-# 话术匹配度、优惠触达本轮不计分。
+# 客服质检评分标准 v2.0.0（6 维 / 四档制）
+# 说明：
+#   1) 6 个维度，满分合计 100；
+#   2) 每个维度按配置的档位给分（多数 4 档，优惠触达 2 档）；
+#   3) 规则维度导入后直接出分；AI 维度在 AI 质检完成前显示「待AI质检」；
+#   4) 每个维度都配置了档位标准，应用内「评分规则」可查看。
+# 注：话术匹配度原文写“20%，满分10分”，按满分 10 分计入总分（否则 6 维合计 110）；
+#     档位分数按 10 分制作等比：10/8/6/2，如需改成 20 分请调整 total 与 points。
 
-version: scoring-v0.2.0
+title: 客服质检评分标准（四档制）
+description: 响应速度/售前必问/话术匹配/问题解决/引导留资/优惠触达六个维度，按优秀-良好-合格-不合格四档给分；规则维度直接出分，AI 维度待质检时占位。
+version: scoring-v2.0.0
 base_score: 100
 pass_score: 60
+
+rating_bands:
+  - {min: 90, label: 优秀}
+  - {min: 75, label: 良好}
+  - {min: 60, label: 合格}
+  - {min: 0, label: 不合格}
+
+tier_labels:
+  excellent: 优秀
+  good: 良好
+  qualified: 合格
+  fail: 不合格
 
 fatal_item:
   requires_human_confirmation: true
   final_score_after_confirmation: 59
   final_status: 不合格
-  # 致命项关键词（命中即标记致命候选，需人工确认）
   terms:
     abusive_language: [傻, 垃圾, 滚, 脑子有问题]
     private_transaction_inducement: [私下, 加微信转账, 微信转账, 不要平台, 线下付款]
@@ -19,59 +37,76 @@ fatal_item:
     malicious_refusal_or_deflection: [不管, 自己看, 爱买不买, 不知道别问]
 
 dimensions:
+  # 1) 响应速度（规则）
   response_speed:
-    enabled_for: [pre_sale]
-    max_deduction: 10
-    bot_counts_as_first_response: true
-    thresholds:
-      excellent_seconds: 20
-      good_seconds: 60
-      qualified_seconds: 180
-    deductions:
-      excellent: 0
-      good: 2
-      qualified: 5
-      failed: 10
+    mode: rule
+    label: 响应速度
+    total: 10
+    levels:
+      excellent: {points: 10, max_seconds: 20, standard: 20 秒内首次回复}
+      good:      {points: 8,  max_seconds: 60, standard: 1 分钟内首次回复}
+      qualified: {points: 6,  max_seconds: 180, standard: 3 分钟内首次回复}
+      fail:      {points: 2,  standard: 超过 3 分钟或无客服回复}
 
+  # 2) 售前必问（规则关键词 + AI 同类关键词确认）
   presale_required_questions:
-    enabled_for: [pre_sale]
-    max_deduction: 20
-    customer_provided_counts_as_covered: true
-    covered_count_deductions:
-      3: 0
-      2: 5
-      1: 10
-      0: 20
-    question_groups:
-      - room_size_or_people_count
-      - video_conference_need
-      - usage_scenario
+    mode: rule
+    label: 售前必问
+    total: 25
+    ai_assist: true
+    groups:
+      room: [会议室多大, 多大会议室, 多少人, 几个人, 几人, 面积, 平方, 座位]
+      video: [视频会议, 视频, 会议设备, 腾讯会议, zoom, 摄像头, 麦克风]
+      scenario: [使用场景, 用途, 怎么用, 做什么用, 日常会议, 培训, 教学]
+    levels:
+      excellent: {points: 25, min_groups: 3, standard: 询问 3 个核心问题（会议室大小/视频会议需求/使用场景）}
+      good:      {points: 20, min_groups: 2, standard: 询问 2 个核心问题}
+      qualified: {points: 15, min_groups: 1, standard: 询问 1 个核心问题}
+      fail:      {points: 5,  min_groups: 0, standard: 未询问核心问题}
 
-  problem_resolution:
-    enabled_for: [pre_sale]
-    max_deduction: 20
-    deductions:
-      complete: 0
-      basic: 5
-      partial: 10
-      unresolved: 20
-
-  lead_capture:
-    enabled_for: [pre_sale]
-    max_deduction: 5
-    deductions:
-      contact_obtained: 0
-      actively_asked_but_refused: 0
-      no_attempt: 5
-
+  # 3) 话术匹配度（AI 语义；匹配度/产品推荐由模型判断）
   phrase_match:
-    enabled: false
-    note: 话术匹配度本轮不计分，作为后续代办模块。
+    mode: ai
+    label: 话术匹配度
+    total: 10
+    ai_map: {pass: excellent, needs_review: qualified, fail: fail}
+    levels:
+      excellent: {points: 10, standard: 话术匹配度 ≥70%，且正确推荐产品/方案}
+      good:      {points: 8,  standard: 话术匹配度 50%-70%}
+      qualified: {points: 6,  standard: 话术匹配度 30%-50%}
+      fail:      {points: 2,  standard: 话术匹配度 <30% 或答非所问}
 
+  # 4) 问题解决（纯 AI 语义）
+  problem_resolution:
+    mode: ai
+    label: 问题解决
+    total: 30
+    ai_map: {pass: excellent, needs_review: qualified, fail: fail}
+    levels:
+      excellent: {points: 30, standard: AI 判定完整解决：客户问题已解决或明确表示明白/接受}
+      good:      {points: 25, standard: AI 判定基本解决：给出有效方案，客户基本认可}
+      qualified: {points: 15, standard: AI 判定部分解决：仍需客户追问或补充}
+      fail:      {points: 5,  standard: AI 判定未解决：答非所问、推诿或问题残留}
+
+  # 5) 引导留资（规则；客户留下联系方式即满分）
+  lead_capture:
+    mode: rule
+    label: 引导留资
+    total: 20
+    levels:
+      excellent: {points: 20, standard: 客户留下电话号码/微信/其他联系方式（含掩码）}
+      good:      {points: 15, standard: 客服主动引导客户留资（留电话/加微信/要联系方式）}
+      qualified: {points: 10, standard: 客服有留资意识（提到联系/方便时联系等）}
+      fail:      {points: 0,  standard: 全程没有留资意识}
+    guide_terms: [留个电话, 留电话, 联系方式, 加微信, 加个微信, 手机号, 微信, 方便联系]
+    aware_terms: [联系, 方便时, 后期, 回访, 跟进]
+
+  # 6) 优惠触达（关键词 + AI 判断同类关键词）
   promotion_touch:
-    enabled: false
-    note: 优惠触达本轮不计分，只记录触达情况。
-
-  after_sale:
-    enabled: false
-    note: 售后只做数量和会话记录，不使用售前评分。
+    mode: rule
+    label: 优惠触达
+    total: 5
+    levels:
+      excellent: {points: 5, standard: 提及优惠/活动/折扣/券等优惠信息}
+      fail:      {points: 0, standard: 未提及优惠信息}
+    terms: [优惠, 活动, 折扣, 券, 满减, 到手价, 福利, 促销, 价格]

@@ -1,0 +1,6 @@
+{
+  "base_url": "https://gateway.example.com/v1",
+  "model": "默认模型",
+  "api_key": "",
+  "api_type": "chat_completions"
+}

@@ -97,6 +97,35 @@ class Matcher:
             else:
                 unmatched_excel.append({"excel": rec})
 
+        # 补匹配：有些会话只有客户消息（客服回复缺失/在别的会话里），按时间+商品宽松匹配
+        if unmatched_excel:
+            remaining = [e for e in log_entries if e["index"] not in matched_log_idx]
+            still_unmatched = []
+            for item in unmatched_excel:
+                rec = item["excel"]
+                consult = self._parse_time(rec.get("_consult_time"))
+                product = rec.get("_product_id")
+                best = None
+                best_diff = None
+                for entry in remaining:
+                    if entry["index"] in matched_log_idx or not entry["first_time"] or not consult:
+                        continue
+                    diff = abs((entry["first_time"] - consult).total_seconds())
+                    if diff > 300:
+                        continue
+                    products = entry["products"]
+                    if product and products and product not in products:
+                        continue
+                    if best is None or diff < best_diff:
+                        best, best_diff = entry, diff
+                if best is not None:
+                    matched.append({"excel": rec, "log": best, "time_diff_seconds": best_diff,
+                                    "product_state": "fallback_time_product"})
+                    matched_log_idx.add(best["index"])
+                else:
+                    still_unmatched.append(item)
+            unmatched_excel = still_unmatched
+
         unmatched_log = [entry for entry in log_entries if entry["index"] not in matched_log_idx]
 
         # 商品一致性分布

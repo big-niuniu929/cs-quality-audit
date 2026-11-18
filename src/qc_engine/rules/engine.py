@@ -102,8 +102,9 @@ class RuleEngine:
         all_text = conversation.normalized_text
         signals = SignalSet()
         signals.after_sale = self._hits(customer_text, self.AFTER_SALE)
-        signals.contact = self._hits(all_text, self.CONTACT)
-        if self.PHONE_RE.search(all_text) or phone_hits(all_text):
+        # 联系方式只认客户消息：客服发的售后/服务电话不属于客户留资
+        signals.contact = self._hits(customer_text, self.CONTACT)
+        if self.PHONE_RE.search(customer_text) or phone_hits(customer_text):
             signals.contact.append("phone_number")
         signals.purchase_explicit = self._hits(customer_text, self.PURCHASE_EXPLICIT)
         signals.discount = self._hits(customer_text, self.DISCOUNT)
@@ -201,7 +202,8 @@ class RuleEngine:
         if stage == "needs_review" or validity == "needs_review":
             suspicious = True
         else:
-            suspicious = validity == "valid" and stage == "pre_sale" and not signals.required_questions
+            # 必问缺失属于确定性扣分项，不再把所有售前会话都放进人工复核队列
+            suspicious = False
 
         advice = self.follow_up_advice(lead_level, signals, validity)
         decision = BusinessDecision(

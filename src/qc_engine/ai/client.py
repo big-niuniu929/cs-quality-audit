@@ -118,8 +118,12 @@ class AIClient:
 
     JUDGE_PROMPT = (
         "你是客服质检判定器。只能基于给出的聊天原文判断，返回 JSON（不要 Markdown）。\n"
-        "字段：judgment(pass|fail|needs_review)、reason(简短中文说明)、suggestion(改进建议)、\n"
+        "字段：judgment(pass|fail|needs_review)、reason(简短中文说明)、\n"
+        "suggestion(结合本段聊天上下文，给出客服服务/话术/产品推荐/成单推进等方面的具体改进建议，并附一句可以直接发给客户的口语化话术；不只写跟进动作，总长不超过 80 字，不要套模板)、\n"
         "evidence(数组，每项含 message_ref 如 'message:3' 与 quote 原文短引用)。\n"
+        "stage_suggestion(pre_sale|after_sale|keep)：如果你认为规则判定的售前/售后阶段有误，给出建议值，否则 keep；\n"
+        "validity_suggestion(valid|invalid|keep)：如果你认为规则判定的有效/无效有误，给出建议值，否则 keep；\n"
+        "suggestion_reason：建议改判的简短依据（没有改判建议则留空）。只有证据明确时才建议改判，禁止猜测。\n"
         "无法确定就用 needs_review，禁止编造原文没有的内容。"
     )
 
@@ -175,8 +179,16 @@ class AIClient:
         evidence = value.get("evidence") or []
         if not isinstance(evidence, list):
             raise ValueError("evidence 不是数组")
+        stage = str(value.get("stage_suggestion") or "keep").strip().lower()
+        validity = str(value.get("validity_suggestion") or "keep").strip().lower()
+        if stage not in {"pre_sale", "after_sale", "keep"}:
+            stage = "keep"
+        if validity not in {"valid", "invalid", "keep"}:
+            validity = "keep"
         return {"status": "done", "judgment": value["judgment"], "reason": str(value.get("reason", "")),
-                "suggestion": str(value.get("suggestion", "")), "evidence": evidence}
+                "suggestion": str(value.get("suggestion", "")), "evidence": evidence,
+                "suggest_stage": stage, "suggest_validity": validity,
+                "suggest_reason": str(value.get("suggestion_reason", ""))}
 
     def _cache_key(self, payload: dict[str, Any]) -> str:
         raw = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))

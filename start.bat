@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 setlocal
 cd /d "%~dp0"
 
@@ -24,7 +25,7 @@ if not defined PY (
 )
 
 echo ============================================
-echo  品牌A QC System 4.0
+echo  全量自动化客服质检系统 4.0
 echo  Python: %PY%
 echo ============================================
 echo Starting... if no window pops up, wait a few seconds.

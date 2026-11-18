@@ -62,9 +62,14 @@ class LogParser:
     def role_for_sender(self, sender_id: str) -> str:
         return self.role_mapper.role_for(sender_id)
 
+    GAP_MINUTES = 30
+
     def parse(self, path: Path) -> list[SessionRecord]:
         text = path.read_text(encoding=self.encoding)
         lines = text.splitlines()
+        # 没有会话分隔标记的日志（例如新店铺导出的格式）：按消息时间间隔兜底切分。
+        if not any(SESSION_START_RE.search(line) for line in lines):
+            return self._parse_by_time_gap(lines, path)
         sessions: list[SessionRecord] = []
         current: SessionRecord | None = None
         current_message: MessageRecord | None = None
@@ -157,6 +162,79 @@ class LogParser:
         if current is not None:
             finalize_session(None, len(lines))
             sessions[-1].warnings.append("file_ended_without_session_marker")
+        return sessions
+
+    def _parse_by_time_gap(self, lines: list[str], path: Path) -> list[SessionRecord]:
+        """兜底解析：没有会话标记时，先抽全部消息，再按相邻消息间隔 > GAP_MINUTES 切分会话。"""
+        messages: list[MessageRecord] = []
+        current: MessageRecord | None = None
+        body_lines: list[str] = []
+        raw_lines: list[str] = []
+
+        def flush() -> None:
+            nonlocal current, body_lines, raw_lines
+            if current is None:
+                return
+            current.body_text = "\n".join(body_lines).strip()
+            current.message_type = self._classify_message(current.body_text)
+            current.product_ids = sorted(set(PRODUCT_URL_RE.findall(current.body_text)))
+            current.raw_text = "\n".join(raw_lines).strip()
+            messages.append(current)
+            current = None
+            body_lines = []
+            raw_lines = []
+
+        for line_number, raw_line in enumerate(lines, start=1):
+            line = raw_line.rstrip("\t")
+            header_match = MESSAGE_HEADER_RE.match(line)
+            if header_match:
+                flush()
+                sent_at = self._parse_time(header_match.group("time"))
+                if sent_at is None:
+                    continue
+                sender_id = header_match.group("speaker")
+                current = MessageRecord(
+                    sender_id=sender_id,
+                    sender_role=self.role_for_sender(sender_id),
+                    sent_at=sent_at,
+                    body_text="",
+                    source_line_start=line_number,
+                    source_line_end=line_number,
+                )
+                raw_lines = [line]
+                body_lines = []
+                continue
+            if current is not None:
+                body_lines.append(line)
+                raw_lines.append(line)
+                current.source_line_end = line_number
+        flush()
+
+        if not messages:
+            return []
+
+        groups: list[list[MessageRecord]] = []
+        current_group: list[MessageRecord] = []
+        for message in messages:
+            if current_group and (message.sent_at - current_group[-1].sent_at).total_seconds() > self.GAP_MINUTES * 60:
+                groups.append(current_group)
+                current_group = []
+            current_group.append(message)
+        if current_group:
+            groups.append(current_group)
+
+        sessions: list[SessionRecord] = []
+        for index, group in enumerate(groups, start=1):
+            session = SessionRecord(
+                session_index=index,
+                first_message_at=group[0].sent_at,
+                last_message_at=group[-1].sent_at,
+                source_end_time=group[-1].sent_at,
+                messages=group,
+                source_file=str(path),
+            )
+            session.warnings.append("fallback_time_gap_split")
+            sessions.append(session)
         return sessions
 
     @staticmethod

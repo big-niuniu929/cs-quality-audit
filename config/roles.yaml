@@ -21,6 +21,9 @@ agents:
 bots:
   - bot_vendor_1000123903
   - bot_vendor_1000483324
+# 机器人账号前缀（电商平台智能客服/服务商机器人）
+bot_prefixes:
+  - bot_vendor_
 
 # 未命中客服/机器人名单的账号，默认归为客户
 default_role: customer

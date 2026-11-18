@@ -15,6 +15,8 @@ class RoleMapper:
     def __init__(self, roles_config: dict[str, Any]):
         self.agents: dict[str, str] = dict(roles_config.get("agents", {}))
         self.bots: set[str] = set(roles_config.get("bots", []))
+        self.bot_prefixes: list[str] = [str(p) for p in (roles_config.get("bot_prefixes") or []) if p]
+        self.bot_prefixes: list[str] = [str(p) for p in (roles_config.get("bot_prefixes") or []) if p]
         self.default_role: str = str(roles_config.get("default_role", "customer"))
         # 兼容旧配置单数 agent_prefix，也支持新的 agent_prefixes 列表
         prefixes = roles_config.get("agent_prefixes")
@@ -22,6 +24,13 @@ class RoleMapper:
             single = roles_config.get("agent_prefix")
             prefixes = [single] if single else []
         self.agent_prefixes: list[str] = [str(p) for p in prefixes if p]
+
+    def _match_bot_prefix(self, sender_id: str) -> str | None:
+        low = sender_id.lower()
+        for p in self.bot_prefixes:
+            if low.startswith(p.lower()):
+                return p
+        return None
 
     def _match_prefix(self, sender_id: str) -> str | None:
         low = sender_id.lower()
@@ -33,10 +42,12 @@ class RoleMapper:
     def role_for(self, sender_id: str) -> str:
         if sender_id in self.agents:
             return "agent"
-        if sender_id in self.bots:
+        if sender_id in self.bots or self._match_bot_prefix(sender_id):
             return "bot"
         if self._match_prefix(sender_id):
             return "agent"
+        # 说明：不能用“名字可读”推断客服——电商平台客户昵称常常也是可读中文（云水川、日粉…）。
+        # 未登记账号一律按 default_role（客户）处理；本批次真实的客服从 Excel「客服」列校准。
         return self.default_role
 
     def display_name(self, sender_id: str) -> str:
